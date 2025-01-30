@@ -1,6 +1,6 @@
 import express from 'express'
 import {adminProtectRoute , protectRoute} from '../middlewares/auth.middleware.js'
-import {addSong , deleteSong , addAlbum , deleteAlbum} from '../controllers/admin.controller.js'
+import {addSong , deleteSong , addAlbum , deleteAlbum , checkAdmin} from '../controllers/admin.controller.js'
  
 const router = express.Router()
 
