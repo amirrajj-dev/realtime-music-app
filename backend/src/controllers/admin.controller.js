@@ -126,3 +126,29 @@ export const addAlbum = async (req, res) => {
     });
   }
 }
+
+export const deleteAlbum = async (req, res) => {
+  try {
+    const {id} = req.params;
+    if (!id){
+      return res.status(400).json({ message: "Missing required fields", success: false });
+    }
+    const album = await albumsModel.findByIdAndDelete(id);
+    if (!album) {
+      return res
+       .status(404)
+       .json({ message: "Album not found", success: false });
+    }
+    await songssModel.deleteMany({ albumId: id });
+    res.status(200).json({
+      message: "Album deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+      error,
+    });
+  }
+}
