@@ -32,5 +32,5 @@ const schema = new mongoose.Schema(
   }
 );
 
-export const artistsModel =
-  mongoose.models.artist || mongoose.model("artist", schema);
+export const songssModel =
+  mongoose.models.artist || mongoose.model("song", schema);
