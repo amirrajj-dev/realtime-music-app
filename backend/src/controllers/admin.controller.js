@@ -94,3 +94,35 @@ export const deleteSong = async (req, res) => {
     });
   }
 }
+
+export const addAlbum = async (req, res) => {
+  try {
+    const { title, artist, releaseDate } = req.body;
+    if (!title ||!artist ||!releaseDate) {
+      return res
+       .status(400)
+       .json({ message: "Missing required fields", success: false });
+    }
+    const imageFile = req.files.imageFile;
+    const imageUrl = uploadToCloudinary(imageFile);
+    const album = new albumsModel({
+      title,
+      artist,
+      releaseDate,
+      imageURL: imageUrl,
+    })
+    await album.save();
+    res.status(201).json({
+      message: "Album created successfully",
+      album,
+      success: true,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+      error,
+    });
+  }
+}
