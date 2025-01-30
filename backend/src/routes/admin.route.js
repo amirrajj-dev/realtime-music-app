@@ -15,4 +15,6 @@ router.delete('/delete-song/:id', deleteSong)
 router.post('/add-album', addAlbum)
 router.delete('/delete-album/:id', deleteAlbum)
 
+router.get('/check-admin' , checkAdmin)
+
 export default router;
