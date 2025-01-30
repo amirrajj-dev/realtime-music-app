@@ -63,3 +63,34 @@ export const addSong = async (req, res) => {
     });
   }
 };
+
+
+export const deleteSong = async (req, res) => {
+  try {
+    const {id} = req.params;
+    if (!id){
+      return res.status(400).json({ message: "Missing required fields", success: false });
+    }
+    const song = await songssModel.findByIdAndDelete(id);
+    if (!song) {
+      return res
+       .status(404)
+       .json({ message: "Song not found", success: false });
+    }
+    if(song.albumId){
+      const album = await albumsModel.findByIdAndUpdate(song.albumId, {
+        $pull: { songs: id },
+      });
+    }
+    res.status(200).json({
+      message: "Song deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+      error,
+    });
+  }
+}
