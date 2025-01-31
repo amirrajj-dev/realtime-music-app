@@ -5,14 +5,12 @@ import jwt from "jsonwebtoken";
 const emailRegex = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/;
 export const signUp = async (req, res) => {
   try {
-    const { fullname, imageUrl, password, email } = req.body;
-
-    if (!fullname || !imageUrl || !password || !email) {
+    const { fullname, password, email } = req.body;
+    if (!fullname || !password || !email) {
       return res
-        .status(400)
-        .json({ message: "Missing required fields", success: false });
+      .status(400)
+      .json({ message: "Missing required fields", success: false });
     }
-
     const isUserExist = await usersModel.findOne({ fullname });
     if (isUserExist) {
       return res
@@ -25,16 +23,20 @@ export const signUp = async (req, res) => {
     }
 
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({
-          message: "Password should be at least 6 characters long",
-          success: false,
-        });
+      return res.status(400).json({
+        message: "Password should be at least 6 characters long",
+        success: false,
+      });
     }
 
     //hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await usersModel.create({
+      fullname,
+      password: hashedPassword,
+      email,
+    });
+
     //generate the token
     const token = await jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -46,13 +48,6 @@ export const signUp = async (req, res) => {
       sameSite: "strict",
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
-    const newUser = await usersModel.create({
-      fullname,
-      imageUrl,
-      password: hashedPassword,
-      email,
     });
 
     res.status(201).json({
@@ -114,10 +109,10 @@ export const signIn = async (req, res) => {
   }
 };
 
-
-export const getToken = async (req, res) =>{
+export const getToken = async (req, res) => {
   try {
-    const token =  req.cookies["music-app-token"];
+    const token = req.cookies["music-app-token"];
+    
     if (!token) {
       return res.status(401).json({ message: "Unauthorized", success: false });
     }
@@ -125,8 +120,6 @@ export const getToken = async (req, res) =>{
       message: "Token is available",
       success: true,
       token,
-    })
-  } catch (error) {
-    
-  }
-}
+    });
+  } catch (error) {}
+};

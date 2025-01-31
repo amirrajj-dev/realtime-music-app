@@ -9,6 +9,7 @@ import statRoutes from './routes/stat.route.js';
 import {connectToDb} from './utils/db.js'
 import fileUpload from 'express-fileupload'
 import path from 'path'
+import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
 dotenv.config()
@@ -16,6 +17,10 @@ const app = express()
 const port = process.env.PORT
 app.use(express.json())
 app.use(cookieParser())
+app.use(cors({
+    origin: 'http://localhost:4000',
+    credentials: true
+}))
 
 const dirname = path.resolve()
 app.use(fileUpload({
