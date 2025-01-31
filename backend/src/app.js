@@ -9,11 +9,13 @@ import statRoutes from './routes/stat.route.js';
 import {connectToDb} from './utils/db.js'
 import fileUpload from 'express-fileupload'
 import path from 'path'
+import cookieParser from 'cookie-parser'
 
 dotenv.config()
 const app = express()
 const port = process.env.PORT
 app.use(express.json())
+app.use(cookieParser())
 
 const dirname = path.resolve()
 app.use(fileUpload({

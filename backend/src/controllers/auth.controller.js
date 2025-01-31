@@ -113,3 +113,20 @@ export const signIn = async (req, res) => {
     });
   }
 };
+
+
+export const getToken = async (req, res) =>{
+  try {
+    const token =  req.cookies["music-app-token"];
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized", success: false });
+    }
+    return res.status(200).json({
+      message: "Token is available",
+      success: true,
+      token,
+    })
+  } catch (error) {
+    
+  }
+}
