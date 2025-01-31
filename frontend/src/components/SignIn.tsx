@@ -1,34 +1,54 @@
-import { TextField, Button, Typography , Box } from '@mui/material';
-import { Email, Lock } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { TextField, Button, Typography, Box } from "@mui/material";
+import { Email, Lock } from "@mui/icons-material";
+import { Link } from "react-router-dom";
+import useThemeStore from "../store/useTheme";
 
 const SignIn = () => {
+  const { theme } = useThemeStore();
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        backgroundColor: 'Background.default',
-        color: 'text.primary',
-        padding : '10px'
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        backgroundColor: "Background.default",
+        color: "text.primary",
+        padding: "10px",
       }}
     >
       <Box
         sx={{
-          width: '100%',
+          width: "100%",
           maxWidth: 400,
           padding: 4,
-          backgroundColor: 'background.paper',
+          backgroundColor: "background.paper",
           borderRadius: 2,
           boxShadow: 3,
         }}
       >
-        <Box sx={{display : 'flex' , alignItems : 'center' , justifyContent : 'center'}}>
-            <img src="public/app-logo/icons8-music-64.svg" alt="" />
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={`${
+              theme.palette.mode === "dark"
+                ? "public/app-logo/dark-logo.svg"
+                : "public/app-logo/light-logo.svg"
+            }`}
+            alt=""
+          />
         </Box>
-        <Typography variant="h4" align="center" className='text-emerald-600' gutterBottom>
+        <Typography
+          variant="h4"
+          align="center"
+          sx={{ color: "primary.main" }}
+          gutterBottom
+        >
           Welcome Back
         </Typography>
         <Box component="form" noValidate>
@@ -39,7 +59,7 @@ const SignIn = () => {
             margin="normal"
             InputProps={{
               startAdornment: (
-                <Email sx={{ marginRight: 1, color: 'text.secondary' }} />
+                <Email sx={{ marginRight: 1, color: "text.secondary" }} />
               ),
             }}
           />
@@ -51,7 +71,7 @@ const SignIn = () => {
             margin="normal"
             InputProps={{
               startAdornment: (
-                <Lock sx={{ marginRight: 1, color: 'text.secondary' }} />
+                <Lock sx={{ marginRight: 1, color: "text.secondary" }} />
               ),
             }}
           />
@@ -61,21 +81,27 @@ const SignIn = () => {
             variant="contained"
             sx={{
               marginY: 2,
-              color: 'white',
-              backgroundColor: 'primary.main',
-              '&:hover': {
-                backgroundColor: 'primary.dark',
+              color: "white",
+              backgroundColor: "primary.main",
+              "&:hover": {
+                backgroundColor: "primary.dark",
               },
             }}
           >
             Sign In
           </Button>
-          <Typography variant="body2" align="center">
-            Don't have an account?{' '}
-            <Link to="/signup" className='hover:underline text-emerald-600'>
-              Sign Up
-            </Link>
-          </Typography>
+          <Box sx={{display : 'flex' , alignItems : 'center' , gap : '3px'}}>
+            Don't have an account?{" "}
+            <Typography
+              variant="body2"
+              align="center"
+              sx={{ color: "primary.main" }}
+            >
+              <Link to="/signup" className="hover:underline">
+                Sign Up
+              </Link>
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </Box>
