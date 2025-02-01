@@ -2,7 +2,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .dark{
-    @apply bg-zinc-900 text-zinc-100
+    @apply bg-slate-800 text-slate-100
 }
 
 .light {

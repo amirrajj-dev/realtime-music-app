@@ -12,8 +12,8 @@ const SignIn = () => {
         justifyContent: "center",
         alignItems: "center",
         minHeight: "100vh",
-        backgroundColor: "Background.default",
-        color: "text.primary",
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
         padding: "10px",
       }}
     >
@@ -22,7 +22,7 @@ const SignIn = () => {
           width: "100%",
           maxWidth: 400,
           padding: 4,
-          backgroundColor: "background.paper",
+          backgroundColor: theme.palette.background.paper,
           borderRadius: 2,
           boxShadow: 3,
         }}
@@ -40,13 +40,13 @@ const SignIn = () => {
                 ? "public/app-logo/dark-logo.svg"
                 : "public/app-logo/light-logo.svg"
             }`}
-            alt=""
+            alt="App Logo"
           />
         </Box>
         <Typography
           variant="h4"
           align="center"
-          sx={{ color: "primary.main" }}
+          sx={{ color: theme.palette.primary.main }}
           gutterBottom
         >
           Welcome Back
@@ -59,7 +59,7 @@ const SignIn = () => {
             margin="normal"
             InputProps={{
               startAdornment: (
-                <Email sx={{ marginRight: 1, color: "text.secondary" }} />
+                <Email sx={{ marginRight: 1, color: theme.palette.text.secondary }} />
               ),
             }}
           />
@@ -71,7 +71,7 @@ const SignIn = () => {
             margin="normal"
             InputProps={{
               startAdornment: (
-                <Lock sx={{ marginRight: 1, color: "text.secondary" }} />
+                <Lock sx={{ marginRight: 1, color: theme.palette.text.secondary }} />
               ),
             }}
           />
@@ -82,20 +82,20 @@ const SignIn = () => {
             sx={{
               marginY: 2,
               color: "white",
-              backgroundColor: "primary.main",
+              backgroundColor: theme.palette.primary.main,
               "&:hover": {
-                backgroundColor: "primary.dark",
+                backgroundColor: theme.palette.primary.dark,
               },
             }}
           >
             Sign In
           </Button>
-          <Box sx={{display : 'flex' , alignItems : 'center' , gap : '3px'}}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
             Don't have an account?{" "}
             <Typography
               variant="body2"
               align="center"
-              sx={{ color: "primary.main" }}
+              sx={{ color: theme.palette.primary.main }}
             >
               <Link to="/signup" className="hover:underline">
                 Sign Up

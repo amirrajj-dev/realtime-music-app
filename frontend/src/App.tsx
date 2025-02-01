@@ -9,6 +9,7 @@ import AuthContextProvider from "./providers/auth.provider";
 import ToggleThemeButton from "./components/TogglethemeButton";
 import {ToastContainer} from 'react-toastify'
 import { useAuthStore } from "./store/useAuth";
+import MainLayout from "./components/MainLayout";
 
 const App: React.FC = () => {
   const theme = useThemeStore((state) => state.theme);
@@ -31,9 +32,11 @@ const App: React.FC = () => {
         <CssBaseline />
         <ToggleThemeButton/>
         <Routes>
-          <Route path="/" element={<HomePage />}></Route>
           <Route path="/signup" element={user ? <Navigate to={'/'}/> : <SignUpPage />}></Route>
           <Route path="/signin" element={user ? <Navigate to={'/'} /> : <SignInPage/>}></Route>
+          <Route element={<MainLayout/>}>
+          <Route path="/" element={<HomePage />}></Route>
+          </Route>
         </Routes>
         <ToastContainer/>
       </AuthContextProvider>

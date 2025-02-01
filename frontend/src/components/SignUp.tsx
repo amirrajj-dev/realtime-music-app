@@ -3,57 +3,56 @@ import { Email, Lock, Person } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import useThemeStore from "../store/useTheme";
 import { useState } from "react";
-import {toast, ToastOptions} from 'react-toastify'
+import { toast, ToastOptions } from 'react-toastify';
 import { useAuthStore } from "../store/useAuth";
 import { User } from "../interfaces/interface";
 
 const SignUp = () => {
   const { theme } = useThemeStore();
-  const {signup , isLoading , error} = useAuthStore()
-  const navigate = useNavigate()
-  const [formdata , setFormdata] = useState<User>({
+  const { signup, isLoading, error } = useAuthStore();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<User>({
     fullname: "",
     email: "",
     password: ""
-  })
+  });
 
-  const handleSubmit = async (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const toastOptions = {
       position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        className : theme.palette.mode === 'dark' ? 'dark' : 'light',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      className: theme.palette.mode === 'dark' ? 'dark' : 'light',
+    };
+    const emailRegex = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/;
+    e.preventDefault();
+    if (!formData.fullname.trim() || !formData.email.trim() || !formData.password.trim()) {
+      toast.error('Please fill in all fields', toastOptions as ToastOptions);
+      return;
     }
-    const emailRegex = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/
-    e.preventDefault()
-    if (!formdata.fullname.trim() || !formdata.email.trim() || !formdata.password.trim()) {
-      toast.error('Please fill in all fields' , toastOptions as ToastOptions)
-      return
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Invalid email address', toastOptions as ToastOptions);
+      return;
     }
-    if (!emailRegex.test(formdata.email)) {
-      toast.error('Invalid email address' , toastOptions as ToastOptions)
-      return
+    if (formData.password.length < 6) {
+      toast.error('Password must be at least 6 characters long', toastOptions as ToastOptions);
+      return;
     }
-    if (formdata.password.length < 6) {
-      toast.error('Password must be at least 6 characters long' , toastOptions as ToastOptions)
-      return
-    }
-    const res = await signup(formdata)
-    if (res.success){
-      toast.success('Signed up successfuly !' , toastOptions as ToastOptions)
+    const res = await signup(formData);
+    if (res.success) {
+      toast.success('Signed up successfully!', toastOptions as ToastOptions);
       setTimeout(() => {
-        navigate('/' , {
+        navigate('/', {
           replace: true,
-        })
+        });
       }, 3000);
-    }else{
-      toast.error(error ? error : 'sth goes wrong signing you up :(', toastOptions as ToastOptions)
+    } else {
+      toast.error(error ? error : 'Something went wrong signing you up :(', toastOptions as ToastOptions);
     }
-  }
-  
+  };
 
   return (
     <Box
@@ -62,8 +61,8 @@ const SignUp = () => {
         justifyContent: "center",
         alignItems: "center",
         minHeight: "100vh",
-        backgroundColor: "background.default",
-        color: "text.primary",
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
         padding: "10px",
       }}
     >
@@ -72,7 +71,7 @@ const SignUp = () => {
           width: "100%",
           maxWidth: 400,
           padding: 4,
-          backgroundColor: "background.paper",
+          backgroundColor: theme.palette.background.paper,
           borderRadius: 2,
           boxShadow: 3,
         }}
@@ -97,7 +96,7 @@ const SignUp = () => {
         <Typography
           variant="h4"
           align="center"
-          sx={{ color: "primary.main" }}
+          sx={{ color: theme.palette.primary.main }}
           gutterBottom
         >
           Create Account
@@ -110,11 +109,11 @@ const SignUp = () => {
             margin="normal"
             InputProps={{
               startAdornment: (
-                <Person sx={{ marginRight: 1, color: "text.secondary" }} />
+                <Person sx={{ marginRight: 1, color: theme.palette.text.secondary }} />
               ),
             }}
-            value={formdata.fullname}
-            onChange={(e) => setFormdata({...formdata, fullname: e.target.value })}
+            value={formData.fullname}
+            onChange={(e) => setFormData({ ...formData, fullname: e.target.value })}
           />
           <TextField
             fullWidth
@@ -123,11 +122,11 @@ const SignUp = () => {
             margin="normal"
             InputProps={{
               startAdornment: (
-                <Email sx={{ marginRight: 1, color: "text.secondary" }} />
+                <Email sx={{ marginRight: 1, color: theme.palette.text.secondary }} />
               ),
             }}
-            value={formdata.email}
-            onChange={(e) => setFormdata({...formdata, email: e.target.value })}
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           />
           <TextField
             fullWidth
@@ -137,11 +136,11 @@ const SignUp = () => {
             margin="normal"
             InputProps={{
               startAdornment: (
-                <Lock sx={{ marginRight: 1, color: "text.secondary" }} />
+                <Lock sx={{ marginRight: 1, color: theme.palette.text.secondary }} />
               ),
             }}
-            value={formdata.password}
-            onChange={(e) => setFormdata({...formdata, password: e.target.value })}
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
           <Button
             type="submit"
@@ -151,13 +150,13 @@ const SignUp = () => {
             sx={{
               marginY: 2,
               color: "white",
-              backgroundColor: "primary.main",
+              backgroundColor: theme.palette.primary.main,
               "&:hover": {
-                backgroundColor: "primary.dark",
+                backgroundColor: theme.palette.primary.dark,
               },
             }}
             disabled={isLoading}
-            onClick={(e)=>handleSubmit(e)}
+            onClick={(e) => handleSubmit(e)}
           >
             {isLoading ? 'Signing Up ...' : 'Sign Up'}
           </Button>
@@ -166,7 +165,7 @@ const SignUp = () => {
             <Typography
               variant="body2"
               align="center"
-              sx={{ color: "primary.main" }}
+              sx={{ color: theme.palette.primary.main }}
             >
               <Link to="/signin" className="hover:underline">
                 Sign In
