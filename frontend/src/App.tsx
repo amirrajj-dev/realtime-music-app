@@ -1,30 +1,41 @@
 import React, { useEffect } from "react";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import useThemeStore from "./store/useTheme";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes , Navigate } from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import SignUpPage from "./pages/signup/SignUpPage";
 import SignInPage from "./pages/signin/SignInPage";
 import AuthContextProvider from "./providers/auth.provider";
+import ToggleThemeButton from "./components/TogglethemeButton";
+import {ToastContainer} from 'react-toastify'
+import { useAuthStore } from "./store/useAuth";
 
 const App: React.FC = () => {
   const theme = useThemeStore((state) => state.theme);
+  const {user , getCurrentUser} = useAuthStore()
+  console.log(user);
   useEffect(() => {
     document.documentElement.classList.remove("dark", "light");
     document.documentElement.classList.add(
       theme.palette.mode === "dark" ? "dark" : "light"
     );
-  }, [theme]);
+    const getUser = async ()=>{
+      await getCurrentUser()
+    }
+    getUser()
+  }, [theme , getCurrentUser]);
 
   return (
     <ThemeProvider theme={theme}>
       <AuthContextProvider>
         <CssBaseline />
+        <ToggleThemeButton/>
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
-          <Route path="/signup" element={<SignUpPage />}></Route>
-          <Route path="/signin" element={<SignInPage />}></Route>
+          <Route path="/signup" element={user ? <Navigate to={'/'}/> : <SignUpPage />}></Route>
+          <Route path="/signin" element={user ? <Navigate to={'/'} /> : <SignInPage/>}></Route>
         </Routes>
+        <ToastContainer/>
       </AuthContextProvider>
     </ThemeProvider>
   );

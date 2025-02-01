@@ -11,3 +11,24 @@ export const getUsers = async (req, res) =>{
         res.status(500).json({ message: "Internal server error", success: false, error });
     }
 }
+
+export const getUser = async (req, res) =>{
+    try {
+        const user = req.user
+        const currentUser = {
+            fullname : user.fullname,
+            email : user.email,
+            id : user._id,
+            createdAt : user.createdAt
+        }
+        if (!user){
+            return res.status(401).json({ message: "Unauthorized", success: false });
+        }
+        return res.status(200).json({
+            data: currentUser,
+            success: true
+        })
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", success: false, error})
+    }
+}

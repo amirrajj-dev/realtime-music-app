@@ -20,8 +20,6 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const res = await axiosInstance.get("/auth/get-token" , {
           withCredentials: true
         });
-        console.log(res);
-        console.log(res);
         if (res.data.token) {
           axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
         } else {
