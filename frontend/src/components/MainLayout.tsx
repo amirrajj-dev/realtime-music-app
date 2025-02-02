@@ -1,5 +1,6 @@
 import { Grid, Box, useTheme } from "@mui/material";
 import {Outlet} from 'react-router-dom'
+import LeftSideBar from "./LeftSideBar";
 const MainLayout = () => {
     const theme = useTheme()
   return (
@@ -13,20 +14,20 @@ const MainLayout = () => {
         backgroundColor: theme.palette.background.default,
       }}
     >
-      <Grid item xs={12} md={3}>
+      <Grid item xs={12} md={2.75}>
         <Box
           sx={{
-            backgroundColor: theme.palette.primary.main,
             padding: "16px",
             height: "100%",
             borderRadius: "4px",
           }}
-        ></Box>
+        >
+          <LeftSideBar/>
+        </Box>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={6.5}>
         <Box
           sx={{
-            backgroundColor: theme.palette.secondary.main,
             height: "100%",
             padding: "16px",
             borderRadius: "4px",
@@ -35,15 +36,16 @@ const MainLayout = () => {
             <Outlet />
         </Box>
       </Grid>
-      <Grid item xs={12} md={3}>
+      <Grid item xs={12} md={2.75}>
         <Box
           sx={{
-            backgroundColor: theme.palette.primary.main,
             padding: "16px",
             height: "100%",
             borderRadius: "4px",
           }}
-        />
+        >
+          right sidebar
+        </Box>
       </Grid>
     </Grid>
   );
