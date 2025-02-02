@@ -109,6 +109,24 @@ export const signIn = async (req, res) => {
   }
 };
 
+export const signOut = async (req, res) => {
+  console.log('yes');
+  try {
+    console.log(res.cookie['music-app-token']);
+    res.cookie('music-app-token' , '' , {
+      expires : new Date(0),
+      maxAge : 0
+  })
+    return res.json({ message: "User signed out successfully", success: true });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+      error,
+    });
+  }
+}
+
 export const getToken = async (req, res) => {
   try {
     const token = req.cookies["music-app-token"];
