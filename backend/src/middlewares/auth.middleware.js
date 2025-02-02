@@ -24,8 +24,8 @@ export const adminProtectRoute = async (req, res, next) =>{
         if (!token) {
             return res.status(401).json({ message: 'You are not authorized to access this route or resource.' , success : false });
         }
-        const payload = await jwt.verify(token, process.env.SECRET_KEY)
-        const user = await usersModel.findById(payload.id)
+        const payload = await jwt.verify(token, process.env.JWT_SECRET)
+        const user = await usersModel.findById(payload._id)
         if (!user) {
             return res.status(401).json({ message: 'You are not authorized to access this route or resource.' , success : false });
         }

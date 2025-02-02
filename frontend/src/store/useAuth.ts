@@ -12,11 +12,14 @@ interface AuthStore {
   error: string | null;
   setError: (error: string | null) => void;
   isLoading: boolean;
+  isAdmin : boolean;
+  checkIsAdmin : ()=>Promise<void>
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
   error: null,
   isLoading: false,
+  isAdmin: false,
   user: null,
   signin: async (user) => {
   },
@@ -62,6 +65,23 @@ export const useAuthStore = create<AuthStore>((set) => ({
     } catch (error : any) {
       set({ error: error.message });
     }finally {
+      set({ isLoading: false });
+    }
+  },
+  checkIsAdmin : async () => {
+    try {
+      set({ isLoading: true });
+      const res = await axiosInstance.get('/admin/check-Admin' , {
+        withCredentials : true
+      });
+      if (res.data.success){
+        set({ isAdmin: true });
+      }else{
+        throw new Error('you are not an admin')
+      }
+    } catch (error : any) {
+      set({ error: error.message });
+    }finally{
       set({ isLoading: false });
     }
   }

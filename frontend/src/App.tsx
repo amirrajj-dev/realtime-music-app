@@ -14,7 +14,7 @@ import MainAlbum from "./pages/albums/mainalbum/MainAlbum";
 
 const App: React.FC = () => {
   const theme = useThemeStore((state) => state.theme);
-  const {user , getCurrentUser} = useAuthStore()
+  const {user , getCurrentUser , checkIsAdmin} = useAuthStore()
   useEffect(() => {
     document.documentElement.classList.remove("dark", "light");
     document.documentElement.classList.add(
@@ -24,7 +24,8 @@ const App: React.FC = () => {
       await getCurrentUser()
     }
     getUser()
-  }, [theme , getCurrentUser]);
+    checkIsAdmin()
+  }, [theme , getCurrentUser , checkIsAdmin]);
 
   return (
     <ThemeProvider theme={theme}>
