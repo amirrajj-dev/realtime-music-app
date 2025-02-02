@@ -1,8 +1,11 @@
-import { Grid, Box, useTheme } from "@mui/material";
-import {Outlet} from 'react-router-dom'
+import { Grid, Box, useTheme, useMediaQuery } from "@mui/material";
+import { Outlet } from 'react-router-dom';
 import LeftSideBar from "./LeftSideBar";
+
 const MainLayout = () => {
-    const theme = useTheme()
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Grid
       container
@@ -10,36 +13,36 @@ const MainLayout = () => {
       style={{
         width: "100%",
         flex: 1,
-        padding: "16px",
+        padding: isMobile ? "8px" : "16px",
         backgroundColor: theme.palette.background.default,
       }}
     >
       <Grid item xs={12} md={2.75}>
         <Box
           sx={{
-            padding: "16px",
+            padding: isMobile ? "8px" : "16px",
             height: "100%",
             borderRadius: "4px",
           }}
         >
-          <LeftSideBar/>
+          <LeftSideBar />
         </Box>
       </Grid>
       <Grid item xs={12} md={6.5}>
         <Box
           sx={{
             height: "100%",
-            padding: "16px",
+            padding: isMobile ? "8px" : "16px",
             borderRadius: "4px",
           }}
         >
-            <Outlet />
+          <Outlet />
         </Box>
       </Grid>
       <Grid item xs={12} md={2.75}>
         <Box
           sx={{
-            padding: "16px",
+            padding: isMobile ? "8px" : "16px",
             height: "100%",
             borderRadius: "4px",
           }}
