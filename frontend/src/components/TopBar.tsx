@@ -1,18 +1,8 @@
 import { useState } from "react";
-import {
-  Box,
-  AppBar,
-  Toolbar,
-  Typography,
-  Avatar,
-  Menu,
-  MenuItem,
-  IconButton,
-  Button,
-  useTheme,
-} from "@mui/material";
+import { Box, AppBar, Toolbar, Typography, Avatar, Menu, MenuItem, IconButton, Button, useTheme } from "@mui/material";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import { useAuthStore } from "../store/useAuth";
+import TopBarSkeleton from "./skeletons/TopBarSkeleton";
 
 const TopBar = () => {
   const { user, isAdmin, isLoading } = useAuthStore();
@@ -32,14 +22,12 @@ const TopBar = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <TopBarSkeleton />;
   }
+
   return (
     <Box>
-      <AppBar
-        position="static"
-        sx={{ backgroundColor: theme.palette.background.paper, boxShadow: 1 }}
-      >
+      <AppBar position="static" sx={{ backgroundColor: theme.palette.background.paper, boxShadow: 1 }}>
         <Toolbar>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box
@@ -54,9 +42,7 @@ const TopBar = () => {
                 marginRight: "8px",
               }}
             >
-              <MusicNoteIcon
-                sx={{ color: theme.palette.primary.contrastText }}
-              />
+              <MusicNoteIcon sx={{ color: theme.palette.primary.contrastText }} />
             </Box>
             <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
               Music App
@@ -65,13 +51,7 @@ const TopBar = () => {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
             {isAdmin && (
-              <Button
-                variant="outlined"
-                sx={{
-                  color: theme.palette.primary.main,
-                  borderColor: theme.palette.primary.main,
-                }}
-              >
+              <Button variant="outlined" sx={{ color: theme.palette.primary.main, borderColor: theme.palette.primary.main }}>
                 Admin Dashboard
               </Button>
             )}
@@ -80,23 +60,14 @@ const TopBar = () => {
                 {user?.fullname.split(" ")[0][0]}
               </Avatar>
             </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
               <MenuItem>{user?.email}</MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Box>
         </Toolbar>
       </AppBar>
-      <Box
-        sx={{
-          padding: "16px",
-          backgroundColor: theme.palette.background.default,
-        }}
-      >
+      <Box sx={{ padding: "16px", backgroundColor: theme.palette.background.default }}>
         <Typography variant="h4" sx={{ color: theme.palette.text.primary }}>
           Welcome to the Music App, {user?.fullname}!
         </Typography>
