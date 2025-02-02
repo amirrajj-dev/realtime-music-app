@@ -1,6 +1,7 @@
 import { Grid, Box, useTheme, useMediaQuery } from "@mui/material";
 import { Outlet } from 'react-router-dom';
 import LeftSideBar from "./LeftSideBar";
+import RightSidebar from "./RightSidebar";
 
 const MainLayout = () => {
   const theme = useTheme();
@@ -47,7 +48,7 @@ const MainLayout = () => {
             borderRadius: "4px",
           }}
         >
-          right sidebar
+          <RightSidebar/>
         </Box>
       </Grid>
     </Grid>

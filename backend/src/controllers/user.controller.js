@@ -4,7 +4,7 @@ export const getUsers = async (req, res) =>{
     try {
         const currentUser = req.user
         //get all users except the current user
-        const users = await usersModel.find({_id : {$ne : currentUser._id}})
+        const users = await usersModel.find({_id : {$ne : currentUser._id}} , 'email , fullname')
         
         res.json({ data : users, success: true });
     } catch (error) {
