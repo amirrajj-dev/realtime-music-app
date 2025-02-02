@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import { User } from '../interfaces/interface';
+import { IUser } from '../interfaces/interface';
 import { axiosInstance } from '../configs/axios';
 
 interface AuthStore {
-  user: User | null;
-  signin: (user: Pick<User, 'email' | 'password'>) => void;
+  user: IUser | null;
+  signin: (user: Pick<IUser, 'email' | 'password'>) => void;
   logout: () => void;
-  signup: (user: User) => Promise<{success : boolean , message? : string}>;
+  signup: (user: IUser) => Promise<{success : boolean , message? : string}>;
   isAuthenticated: () => boolean;
   getCurrentUser : ()=>void,
   error: string | null;
@@ -53,7 +53,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
       const res = await axiosInstance.get('/users/curentuser' , {
         withCredentials : true
       });
-      console.log(res);
       if (res.data.success){
         set({ user: res.data.data, error: null , isLoading: false });
       }else{
