@@ -10,11 +10,11 @@ import ToggleThemeButton from "./components/TogglethemeButton";
 import {ToastContainer} from 'react-toastify'
 import { useAuthStore } from "./store/useAuth";
 import MainLayout from "./components/MainLayout";
+import MainAlbum from "./pages/albums/mainalbum/MainAlbum";
 
 const App: React.FC = () => {
   const theme = useThemeStore((state) => state.theme);
   const {user , getCurrentUser} = useAuthStore()
-  console.log(user);
   useEffect(() => {
     document.documentElement.classList.remove("dark", "light");
     document.documentElement.classList.add(
@@ -36,6 +36,7 @@ const App: React.FC = () => {
           <Route path="/signin" element={user ? <Navigate to={'/'} /> : <SignInPage/>}></Route>
           <Route element={<MainLayout/>}>
           <Route path="/" element={<HomePage />}></Route>
+          <Route path="/albums/:id" element={<MainAlbum/>} />
           </Route>
         </Routes>
         <ToastContainer/>
