@@ -5,7 +5,7 @@ import { axiosInstance } from '../configs/axios';
 interface AuthStore {
   user: IUser | null;
   signin: (user: Pick<IUser, 'email' | 'password'>) => void;
-  logout: () => void;
+  logout: () => Promise<void | {success : boolean}>;
   signup: (user: IUser) => Promise<{success : boolean , message? : string}>;
   isAuthenticated: () => boolean;
   getCurrentUser : ()=>void,
@@ -23,7 +23,27 @@ export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   signin: async (user) => {
   },
-  logout: () => {
+  logout: async () => {
+    try {
+      set({isLoading: true})
+      const res = await axiosInstance.post('/auth/signout' , {} , {
+        withCredentials : true
+      })
+      console.log(res);
+      if (res.data.success) {
+        set({ user: null, error: null, isLoading: false , isAdmin : false });
+        return {
+            success : true
+        }
+      } else {
+        throw new Error(res.data.message);
+      }
+    } catch (error : any) {
+      const errorMessage = error.response?.data?.message || error.message;
+      set({ error: errorMessage, isLoading: false });
+    }finally{
+      set({ isLoading: false });
+    }
   },
   signup: async (user) => {
     try {
