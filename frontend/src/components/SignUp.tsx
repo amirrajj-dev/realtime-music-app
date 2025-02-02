@@ -5,13 +5,13 @@ import useThemeStore from "../store/useTheme";
 import { useState } from "react";
 import { toast, ToastOptions } from 'react-toastify';
 import { useAuthStore } from "../store/useAuth";
-import { User } from "../interfaces/interface";
+import { IUser } from "../interfaces/interface";
 
 const SignUp = () => {
   const { theme } = useThemeStore();
   const { signup, isLoading, error } = useAuthStore();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<User>({
+  const [formData, setFormData] = useState<IUser>({
     fullname: "",
     email: "",
     password: ""

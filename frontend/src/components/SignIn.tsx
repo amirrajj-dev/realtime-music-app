@@ -2,9 +2,48 @@ import { TextField, Button, Typography, Box } from "@mui/material";
 import { Email, Lock } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import useThemeStore from "../store/useTheme";
+import { useAuthStore } from "../store/useAuth";
+import { useState } from "react";
+import {toast , ToastOptions} from 'react-toastify'
 
 const SignIn = () => {
   const { theme } = useThemeStore();
+  const [formdata, setFormData] = useState<{
+    email: string;
+    password: string;
+  }>({
+    email : '',
+    password : ''
+  });
+  const { signin , isLoading } = useAuthStore();
+  const toastOptions = {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: false,
+    className: theme.palette.mode === 'dark' ? 'dark' : 'light',
+  };
+  const handleSignIn = async (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    const emailRegex = /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/;
+    if (!emailRegex.test(formdata.email.trim())){
+      toast.error('invalid email format' , toastOptions as ToastOptions)
+      return;
+    }
+    if (formdata.password.trim().length < 6){
+      toast.error('password must be at least 6 characters long' , toastOptions as ToastOptions)
+      return;
+    }
+    console.log(formdata);
+    const res = await signin(formdata)
+    if (res!.success){
+      toast.success('welcome back :)' , toastOptions as ToastOptions)
+    }else{
+      toast.error(res!.error || 'sth goes wrong siging you in :(' , toastOptions as ToastOptions)
+    }
+  };
   return (
     <Box
       sx={{
@@ -59,9 +98,13 @@ const SignIn = () => {
             margin="normal"
             InputProps={{
               startAdornment: (
-                <Email sx={{ marginRight: 1, color: theme.palette.text.secondary }} />
+                <Email
+                  sx={{ marginRight: 1, color: theme.palette.text.secondary }}
+                />
               ),
             }}
+             value={formdata.email}
+            onChange={(e)=>setFormData({...formdata , email : e.target.value})}
           />
           <TextField
             fullWidth
@@ -71,9 +114,13 @@ const SignIn = () => {
             margin="normal"
             InputProps={{
               startAdornment: (
-                <Lock sx={{ marginRight: 1, color: theme.palette.text.secondary }} />
+                <Lock
+                  sx={{ marginRight: 1, color: theme.palette.text.secondary }}
+                />
               ),
             }}
+            value={formdata.password}
+            onChange={(e)=>setFormData({...formdata , password : e.target.value})}
           />
           <Button
             type="submit"
@@ -87,10 +134,11 @@ const SignIn = () => {
                 backgroundColor: theme.palette.primary.dark,
               },
             }}
+            onClick={e=>handleSignIn(e)}
           >
-            Sign In
+            {isLoading ? 'Signing In ...' : 'Sign In'}
           </Button>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "3px" }}>
             Don't have an account?{" "}
             <Typography
               variant="body2"
