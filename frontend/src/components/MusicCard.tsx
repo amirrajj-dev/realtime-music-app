@@ -9,10 +9,11 @@ interface MusicCardProps {
 }
 
 const MusicCard: React.FC<MusicCardProps> = ({ title, artist, imageUrl }) => {
-    const theme = useTheme();
-    const isDarkMode = theme.palette.mode === 'dark';
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
+
   return (
-    <Card className="relative group w-full max-w-sm rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+    <Card className="relative group w-full sm:max-w-sm rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
       <CardMedia
         component="img"
         alt={title}
@@ -20,7 +21,7 @@ const MusicCard: React.FC<MusicCardProps> = ({ title, artist, imageUrl }) => {
         className="w-full h-32 object-cover"
       />
       <IconButton
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-emerald-500 rounded-full p-2"
         aria-label="play"
       >
         <PlayArrowIcon className={`${isDarkMode ? 'text-white' : 'text-indigo-700'}`} />
