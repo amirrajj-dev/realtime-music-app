@@ -1,3 +1,4 @@
+import FeaturedSongs from "../../components/FeaturedSongs";
 import TopBar from "../../components/TopBar";
 
 
@@ -7,7 +8,10 @@ const HomePage = () => {
   
 
   return (
-   <TopBar/>
+    <>
+    <TopBar/>
+    <FeaturedSongs/>
+    </>
   );
 };
 

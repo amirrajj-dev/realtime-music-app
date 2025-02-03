@@ -1,4 +1,4 @@
-import { Box, Skeleton, Typography } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 const PlaylistSkeleton = () => {

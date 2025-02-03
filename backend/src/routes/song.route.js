@@ -4,8 +4,8 @@ import {adminProtectRoute , protectRoute} from '../middlewares/auth.middleware.j
 const router = express.Router()
 
 router.get('/' , protectRoute , adminProtectRoute , getSongs)
-router.get('/featued-songs' , getFeaturedSongs)
+router.get('/featured-songs' , getFeaturedSongs)
 router.get('/made-for-you-songs' , getMadeForYouSongs)
-router.get('/tredits-songs' , getTrendingSongs)
+router.get('/trending-songs' , getTrendingSongs)
 
 export default router;
