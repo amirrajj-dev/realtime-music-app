@@ -71,9 +71,10 @@ export const useMusicStore = create<SongStore>((set) => ({
     try {
       set({ isLoading: true });
       const res = await axiosInstance.get(`/songs/made-for-you-songs`);
+      console.log(res);
       if (!res.data.success) throw new Error("Failed to fetch made for you songs");
       const data = res.data.data;
-      set({ featuredSongs: data, isLoading: false });
+      set({ madeForYouSongs: data, isLoading: false });
     } catch (error : any) {
       set({ error: error.message, isLoading: false });
     }finally{
@@ -86,7 +87,7 @@ export const useMusicStore = create<SongStore>((set) => ({
       const res = await axiosInstance.get(`/songs/trending-songs`);
       if (!res.data.success) throw new Error("Failed to fetch trending songs");
       const data = res.data.data;
-      set({ featuredSongs: data, isLoading: false });
+      set({ trendingSongs: data, isLoading: false });
     } catch (error : any) {
       set({ error: error.message, isLoading: false });
     }finally{
