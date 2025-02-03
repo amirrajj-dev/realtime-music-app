@@ -4,9 +4,11 @@ import PersonIcon from "@mui/icons-material/Person";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useChatStore } from "../store/useChat";
 import RightSidebarSkeleton from "./skeletons/RightSideBarSkeleton";
+import { useAuthStore } from "../store/useAuth";
 
 const RightSidebar = () => {
   const { users, getUsers, isLoading } = useChatStore();
+  const { user } = useAuthStore();
   const [isPlaying, setIsPlaying] = useState(true);
   const theme = useTheme();
 
@@ -16,6 +18,32 @@ const RightSidebar = () => {
 
   if (isLoading) {
     return <RightSidebarSkeleton />;
+  }
+
+  if (!user) {
+    return (
+      <Box
+        sx={{
+          padding: "16px",
+          backgroundColor: theme.palette.background.default,
+          borderRadius: "8px",
+          boxShadow: 3,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ color: theme.palette.text.primary, marginBottom: "16px" }}
+        >
+          Friends Activity
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{ color: theme.palette.text.secondary }}
+        >
+          Please log in to see your friends' activities.
+        </Typography>
+      </Box>
+    );
   }
 
   return (
