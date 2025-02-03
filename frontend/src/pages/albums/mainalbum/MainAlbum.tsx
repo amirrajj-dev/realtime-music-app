@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 
 const MainAlbum = () => {
   const { id } = useParams();
@@ -77,6 +78,7 @@ const MainAlbum = () => {
         alignItems: "center",
         gap: "24px",
         padding: "24px",
+        position: "relative",
       }}
     >
       <Card
@@ -85,6 +87,7 @@ const MainAlbum = () => {
           width: "100%",
           backgroundColor: theme.palette.background.paper,
           borderRadius: "8px",
+          position: "relative",
         }}
       >
         <CardMedia
@@ -113,6 +116,28 @@ const MainAlbum = () => {
             {mainAlbum.songs.length} songs
           </Typography>
         </CardContent>
+        <IconButton
+          sx={{
+            position: "absolute",
+            bottom: "160px",
+            left: "20px",
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.background.paper,
+            cursor: "pointer",
+            borderRadius: "50%",
+            width: "50px",
+            height: "50px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            ":hover" : {
+              backgroundColor: theme.palette.primary.dark,
+              color: theme.palette.background.paper,
+            }
+          }}
+        >
+          <PlayArrowOutlinedIcon />
+        </IconButton>
       </Card>
 
       <TableContainer
@@ -129,10 +154,18 @@ const MainAlbum = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ color: theme.palette.text.primary }}>#</TableCell>
-              <TableCell sx={{ color: theme.palette.text.primary }}>Title</TableCell>
-              <TableCell sx={{ color: theme.palette.text.primary }}>Release Date</TableCell>
-              <TableCell sx={{ color: theme.palette.text.primary }}>Duration</TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
+                #
+              </TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
+                Title
+              </TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
+                Release Date
+              </TableCell>
+              <TableCell sx={{ color: theme.palette.text.primary }}>
+                Duration
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -152,7 +185,9 @@ const MainAlbum = () => {
                 <TableCell>
                   {hoveredRow === song._id ? (
                     <IconButton>
-                      <PlayArrowIcon sx={{ color: theme.palette.primary.main }} />
+                      <PlayArrowIcon
+                        sx={{ color: theme.palette.primary.main }}
+                      />
                     </IconButton>
                   ) : (
                     index + 1
@@ -178,7 +213,10 @@ const MainAlbum = () => {
                     <Typography sx={{ color: theme.palette.text.primary }}>
                       {song.title}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: theme.palette.text.secondary }}
+                    >
                       {song.artist}
                     </Typography>
                   </Box>
@@ -191,7 +229,8 @@ const MainAlbum = () => {
                     fontSize="small"
                     sx={{ verticalAlign: "middle", marginRight: "4px" }}
                   />
-                  {Math.floor(song.duration / 60)}:{String(song.duration % 60).padStart(2, "0")}
+                  {Math.floor(song.duration / 60)}:
+                  {String(song.duration % 60).padStart(2, "0")}
                 </TableCell>
               </TableRow>
             ))}

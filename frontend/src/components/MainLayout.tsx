@@ -18,10 +18,10 @@ const MainLayout = () => {
         backgroundColor: theme.palette.background.default,
       }}
     >
-      <Grid item xs={12} md={2.75}>
+      <Grid item xs={12} lg={2.75}>
         <Box
           sx={{
-            padding: isMobile ? "8px" : "16px",
+            padding: isMobile ? "8px" : "12px",
             height: "100%",
             borderRadius: "4px",
           }}
@@ -29,21 +29,21 @@ const MainLayout = () => {
           <LeftSideBar />
         </Box>
       </Grid>
-      <Grid item xs={12} md={6.5}>
+      <Grid item xs={12} lg={6.5}>
         <Box
           sx={{
             height: "100%",
-            padding: isMobile ? "8px" : "16px",
+            padding: isMobile ? "8px" : "12px",
             borderRadius: "4px",
           }}
         >
           <Outlet />
         </Box>
       </Grid>
-      <Grid item xs={12} md={2.75}>
+      <Grid item xs={12} lg={2.75}>
         <Box
           sx={{
-            padding: isMobile ? "8px" : "16px",
+            padding: isMobile ? "8px" : "12px",
             height: "100%",
             borderRadius: "4px",
           }}
