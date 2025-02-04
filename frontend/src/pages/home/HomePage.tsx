@@ -1,5 +1,7 @@
 import FeaturedSongs from "../../components/FeaturedSongs";
+import MadeForYouSongs from "../../components/MadeForYouSongs";
 import TopBar from "../../components/TopBar";
+import TrendingSongs from "../../components/TrendingSongs";
 
 
 const HomePage = () => {
@@ -11,6 +13,8 @@ const HomePage = () => {
     <>
     <TopBar/>
     <FeaturedSongs/>
+    <MadeForYouSongs/>
+    <TrendingSongs/>
     </>
   );
 };
