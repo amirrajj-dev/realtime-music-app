@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useMusicStore } from "../../../store/useMusic";
 import { useEffect, useState } from "react";
+import { keyframes } from "@mui/material";
 import {
   Box,
   Card,
@@ -21,14 +22,19 @@ import {
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
+import { usePlayerStore } from "../../../store/usePlayerStore";
+import AudioPlayer from "../../../components/AudioPlayer";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
+import PauseIcon from '@mui/icons-material/Pause';
 
 const MainAlbum = () => {
   const { id } = useParams();
   const { getAlbumById, isLoading, mainAlbum } = useMusicStore();
   const theme = useTheme();
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-
+  const { setCurrentSong, togglePlay, isPlaying, playAlbum, currentSong } =
+    usePlayerStore();
   useEffect(() => {
     getAlbumById(id as string);
   }, [id, getAlbumById]);
@@ -65,10 +71,24 @@ const MainAlbum = () => {
     );
   }
 
-  const handleRowClick = (songId: string) => {
-    // Add your play song logic here
-    console.log("Playing song with ID:", songId);
+  const handleRowClick = (song) => {
+    setCurrentSong(song);
   };
+
+  const handlePlayAlbum = () => {
+    console.log(mainAlbum.songs);
+    console.log(currentSong);
+    playAlbum(mainAlbum.songs, 0);
+  };
+
+  const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
   return (
     <Box
@@ -130,16 +150,22 @@ const MainAlbum = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            ":hover" : {
+            ":hover": {
               backgroundColor: theme.palette.primary.dark,
               color: theme.palette.background.paper,
-            }
+              transition: "all 0.3s ease-in-out",
+              transform: "scale(1.1)",
+            },
           }}
+          onClick={() => handlePlayAlbum()}
         >
-          <PlayArrowOutlinedIcon />
+          {isPlaying ? (
+            <PauseIcon  />
+          ) : (
+            <PlayArrowOutlinedIcon onClick={handlePlayAlbum} />
+          )}
         </IconButton>
       </Card>
-
       <TableContainer
         component={Paper}
         sx={{
@@ -174,16 +200,31 @@ const MainAlbum = () => {
                 key={song._id}
                 onMouseEnter={() => setHoveredRow(song._id)}
                 onMouseLeave={() => setHoveredRow(null)}
-                onClick={() => handleRowClick(song._id)}
+                onClick={() => handleRowClick(song)}
                 sx={{
                   cursor: "pointer",
+                  background:
+                    currentSong?._id === song._id
+                      ? theme.palette.primary.main
+                      : "inherit",
+                
+                  transition: "all 0.3s ease-in-out",
                   "&:hover": {
-                    backgroundColor: theme.palette.action.hover,
+                    backgroundColor:
+                      currentSong?._id === song._id
+                        ? theme.palette.secondary.main
+                        : theme.palette.action.hover,
                   },
                 }}
               >
                 <TableCell>
-                  {hoveredRow === song._id ? (
+                  {currentSong?._id === song._id ? (
+                    <IconButton sx={{animation : `${rotate} 2s linear infinite`}}>
+                      <MusicNoteIcon
+                        sx={{ color: theme.palette.background.paper }}
+                      />
+                    </IconButton>
+                  ) : hoveredRow === song._id ? (
                     <IconButton>
                       <PlayArrowIcon
                         sx={{ color: theme.palette.primary.main }}
@@ -207,6 +248,10 @@ const MainAlbum = () => {
                       marginRight: "16px",
                       width: "50px",
                       height: "50px",
+                      border:
+                        currentSong?._id === song._id
+                          ? `2px solid ${theme.palette.primary.main}`
+                          : "none",
                     }}
                   />
                   <Box>
@@ -237,6 +282,7 @@ const MainAlbum = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <AudioPlayer />
     </Box>
   );
 };
