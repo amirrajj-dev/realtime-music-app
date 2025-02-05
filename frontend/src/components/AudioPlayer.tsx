@@ -1,16 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { usePlayerStore } from "../store/usePlayerStore";
 
 const AudioPlayer = () => {
-  const audioPlayerRef = React.useRef<HTMLAudioElement>(null);
+  const audioPlayerRef = useRef<HTMLAudioElement>(null);
   const prevSongRef = useRef<string | null>(null);
   const { currentSong, isPlaying, playNext } = usePlayerStore();
 
   useEffect(() => {
-    console.log(isPlaying);
-    console.log(audioPlayerRef.current);
-    if (isPlaying) audioPlayerRef.current?.play();
-    else audioPlayerRef.current?.pause();
+    const audio = audioPlayerRef.current;
+    if (!audio) return;
+    if (isPlaying) audio.play();
+    else audio.pause();
   }, [isPlaying]);
 
   useEffect(() => {
@@ -28,10 +28,9 @@ const AudioPlayer = () => {
   useEffect(() => {
     const audio = audioPlayerRef.current;
     if (!audio || !currentSong) return;
-    const isSongChanged = prevSongRef.current !== currentSong?.audioUrl;
-    if (isSongChanged) {
-      audio.src = currentSong?.audioUrl;
-      prevSongRef.current = currentSong?.audioUrl;
+    if (prevSongRef.current !== currentSong.audioUrl) {
+      audio.src = currentSong.audioUrl;
+      prevSongRef.current = currentSong.audioUrl;
       audio.currentTime = 0;
       if (isPlaying) audio.play();
     }
