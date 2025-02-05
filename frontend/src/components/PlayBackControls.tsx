@@ -139,18 +139,19 @@ const PlaybackControl: React.FC = () => {
   return (
     <>
       <Box
-        sx={{
-          position: "fixed",
+         sx={{
+          position: 'fixed',
           bottom: 0,
           left: 0,
-          width: "100%",
+          width: '100%',
           backgroundColor: theme.palette.background.paper,
           borderTop: `1px solid ${theme.palette.divider}`,
           p: isMobile ? 1 : 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           zIndex: 1000,
+          boxShadow: '0 -2px 5px rgba(0,0,0,0.1)',
         }}
         className="playback-control"
       >
@@ -190,26 +191,52 @@ const PlaybackControl: React.FC = () => {
                 }}
               >
                 <Box>
-                  <IconButton onClick={playPrevious}>
+                  <IconButton onClick={playPrevious} sx={{
+                  transition: 'transform 0.2s',
+                  '&:hover': {
+                    transform: 'scale(1.2)',
+                  },
+                }}>
                     <SkipPreviousRoundedIcon fontSize="large" />
                   </IconButton>
-                  <IconButton onClick={playPause}>
+                  <IconButton onClick={playPause} sx={{
+                  transition: 'transform 0.2s',
+                  '&:hover': {
+                    transform: 'scale(1.2)',
+                  },
+                }}>
                     {isPlaying ? (
                       <PauseRoundedIcon fontSize="large" />
                     ) : (
                       <PlayArrowRoundedIcon fontSize="large" />
                     )}
                   </IconButton>
-                  <IconButton onClick={playNext}>
+                  <IconButton onClick={playNext} sx={{
+                  transition: 'transform 0.2s',
+                  '&:hover': {
+                    transform: 'scale(1.2)',
+                  },
+                }}>
                     <SkipNextRoundedIcon fontSize="large" />
                   </IconButton>
                   <IconButton
+                  sx={{
+                    transition: 'transform 0.2s',
+                    '&:hover': {
+                      transform: 'scale(1.2)',
+                    },
+                  }}
                     onClick={toggleShuffle}
                     color={isShuffle ? "primary" : "default"}
                   >
                     <ShuffleIcon fontSize="large" />
                   </IconButton>
-                  <IconButton onClick={setRepeatMode}>
+                  <IconButton onClick={setRepeatMode} sx={{
+                  transition: 'transform 0.2s',
+                  '&:hover': {
+                    transform: 'scale(1.2)',
+                  },
+                }}>
                     {repeatMode === "one" ? (
                       <RepeatOneIcon fontSize="large" color="primary" />
                     ) : (
