@@ -9,6 +9,8 @@ interface PlayerStore {
   setSongs: (songs: ISong[]) => void;
   setCurrentSong: (song: ISong) => void;
   togglePlay: () => void;
+  playSong: (song: ISong) => void;
+  pauseSong: () => void;
   playAlbum: (songs: ISong[], startIndex?: number) => void;
   playNext: () => void;
   playPrevious: () => void;
@@ -28,15 +30,26 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   },
   setCurrentSong: (song) => {
     if (!song) return;
-    const currentSongIndex = get().songs.findIndex((s) => s._id === song._id);
-    set({
-      currentSong: song,
-      currentIndex: currentSongIndex !== -1 ? currentSongIndex : get().currentIndex,
-      isPlaying: true,
-    });
+    const { currentSong, isPlaying } = get();
+    if (currentSong?._id === song._id) {
+      set({ isPlaying: !isPlaying });
+    } else {
+      const currentSongIndex = get().songs.findIndex((s) => s._id === song._id);
+      set({
+        currentSong: song,
+        currentIndex: currentSongIndex !== -1 ? currentSongIndex : get().currentIndex,
+        isPlaying: true,
+      });
+    }
   },
   togglePlay: () => {
     set((state) => ({ isPlaying: !state.isPlaying }));
+  },
+  playSong: (song) => {
+    set({ currentSong: song, isPlaying: true });
+  },
+  pauseSong: () => {
+    set({ isPlaying: false });
   },
   playNext: () => {
     const { currentIndex, songs } = get();
@@ -62,10 +75,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   },
   playAlbum: (songs: ISong[], startIndex = 0) => {
     if (!songs.length) return;
-    const song = songs[startIndex];
     set({
       songs,
-      currentSong: song,
+      currentSong: songs[startIndex],
       currentIndex: startIndex,
       isPlaying: true,
     });
