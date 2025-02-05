@@ -19,6 +19,7 @@ import VolumeOffRoundedIcon from "@mui/icons-material/VolumeOffRounded";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import RepeatIcon from '@mui/icons-material/Repeat';
 import RepeatOneIcon from '@mui/icons-material/RepeatOne';
+import { VolumeDownRounded } from "@mui/icons-material";
 
 const PlaybackControl: React.FC = () => {
   const theme = useTheme();
@@ -134,6 +135,16 @@ const PlaybackControl: React.FC = () => {
 
   const playPause = () => {
     togglePlay();
+  };
+
+  const getVolumeIcon = () => {
+    if (isMuted || volume === 0) {
+      return <VolumeOffRoundedIcon  />;
+    } else if (volume < 0.5) {
+      return <VolumeDownRounded />;
+    } else {
+      return <VolumeUpRoundedIcon />;
+    }
   };
 
   return (
@@ -286,11 +297,7 @@ const PlaybackControl: React.FC = () => {
               }}
             >
               <IconButton onClick={handleMute}>
-                {isMuted || volume === 0 ? (
-                  <VolumeOffRoundedIcon />
-                ) : (
-                  <VolumeUpRoundedIcon />
-                )}
+                {getVolumeIcon()}
               </IconButton>
               <Slider
                 min={0}
