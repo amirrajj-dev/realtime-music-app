@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { usePlayerStore } from '../store/usePlayerStore';
+import React, { useState, useEffect, useRef } from "react";
+import { usePlayerStore } from "../store/usePlayerStore";
 import {
   Box,
   IconButton,
@@ -9,18 +9,20 @@ import {
   useMediaQuery,
   Grid,
   Avatar,
-} from '@mui/material';
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
-import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
-import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded';
-import SkipPreviousRoundedIcon from '@mui/icons-material/SkipPreviousRounded';
-import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
-import VolumeOffRoundedIcon from '@mui/icons-material/VolumeOffRounded';
-import ShuffleIcon from '@mui/icons-material/Shuffle';
+} from "@mui/material";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
+import SkipNextRoundedIcon from "@mui/icons-material/SkipNextRounded";
+import SkipPreviousRoundedIcon from "@mui/icons-material/SkipPreviousRounded";
+import VolumeUpRoundedIcon from "@mui/icons-material/VolumeUpRounded";
+import VolumeOffRoundedIcon from "@mui/icons-material/VolumeOffRounded";
+import ShuffleIcon from "@mui/icons-material/Shuffle";
+import RepeatIcon from '@mui/icons-material/Repeat';
+import RepeatOneIcon from '@mui/icons-material/RepeatOne';
 
 const PlaybackControl: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const {
     currentSong,
     isPlaying,
@@ -32,7 +34,9 @@ const PlaybackControl: React.FC = () => {
     setCurrentTime,
     setDuration,
     isShuffle,
-    toggleShuffle
+    toggleShuffle,
+    repeatMode,
+    setRepeatMode,
   } = usePlayerStore();
 
   const [volume, setVolume] = useState<number>(0.8);
@@ -73,17 +77,27 @@ const PlaybackControl: React.FC = () => {
     };
 
     const handleEnded = () => {
-      playNext();
-    };
+      const { repeatMode } = usePlayerStore.getState();
+    
+      if (repeatMode === 'one') {
+        const audio = audioRef.current;
+        if (audio) {
+          audio.currentTime = 0;
+          audio.play();
+        }
+      } else {
+        playNext();
+      }
+    };    
 
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("ended", handleEnded);
 
     return () => {
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("ended", handleEnded);
     };
   }, [playNext, setCurrentTime, setDuration]);
 
@@ -95,7 +109,7 @@ const PlaybackControl: React.FC = () => {
   }, [volume, isMuted]);
 
   const formatTime = (time: number) => {
-    if (isNaN(time)) return '0:00';
+    if (isNaN(time)) return "0:00";
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
@@ -126,16 +140,16 @@ const PlaybackControl: React.FC = () => {
     <>
       <Box
         sx={{
-          position: 'fixed',
+          position: "fixed",
           bottom: 0,
           left: 0,
-          width: '100%',
+          width: "100%",
           backgroundColor: theme.palette.background.paper,
           borderTop: `1px solid ${theme.palette.divider}`,
           p: isMobile ? 1 : 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
           zIndex: 1000,
         }}
         className="playback-control"
@@ -149,7 +163,7 @@ const PlaybackControl: React.FC = () => {
               sm={4}
               md={3}
               lg={3}
-              sx={{ display: 'flex', alignItems: 'center' }}
+              sx={{ display: "flex", alignItems: "center" }}
             >
               <Avatar
                 src={currentSong.imageUrl}
@@ -169,7 +183,11 @@ const PlaybackControl: React.FC = () => {
             {/* Playback Controls */}
             <Grid item xs={12} sm={5} md={6} lg={6}>
               <Box
-                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
                 <Box>
                   <IconButton onClick={playPrevious}>
@@ -185,15 +203,28 @@ const PlaybackControl: React.FC = () => {
                   <IconButton onClick={playNext}>
                     <SkipNextRoundedIcon fontSize="large" />
                   </IconButton>
-                  <IconButton onClick={toggleShuffle} color={isShuffle ? 'primary' : 'default'}>
+                  <IconButton
+                    onClick={toggleShuffle}
+                    color={isShuffle ? "primary" : "default"}
+                  >
                     <ShuffleIcon fontSize="large" />
+                  </IconButton>
+                  <IconButton onClick={setRepeatMode}>
+                    {repeatMode === "one" ? (
+                      <RepeatOneIcon fontSize="large" color="primary" />
+                    ) : (
+                      <RepeatIcon
+                        fontSize="large"
+                        color={repeatMode === "all" ? "primary" : "inherit"}
+                      />
+                    )}
                   </IconButton>
                 </Box>
                 <Box
                   sx={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
                     mt: 1,
                   }}
                 >
@@ -222,9 +253,9 @@ const PlaybackControl: React.FC = () => {
               md={3}
               lg={3}
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: isMobile ? 'center' : 'flex-end',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: isMobile ? "center" : "flex-end",
               }}
             >
               <IconButton onClick={handleMute}>
