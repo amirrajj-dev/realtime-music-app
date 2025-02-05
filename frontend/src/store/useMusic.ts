@@ -8,6 +8,7 @@ interface SongStore {
   mainAlbum : IAlbum | null;
   getAlbums: () => Promise<void>;
   getAlbumById : (id : string) => Promise<void>;
+  getSongs : ()=>Promise<void>
   featuredSongs : ISong[];
   getFeaturedSongs : () => Promise<void>;
   trendingSongs : ISong[];
@@ -92,5 +93,20 @@ export const useMusicStore = create<SongStore>((set) => ({
     }finally{
       set({isLoading : false})
     }
-  },  
+  }, 
+  getSongs : async ()=> {
+    try {
+      set({ isLoading: true });
+      const res = await axiosInstance.get(`/songs` , {
+        withCredentials : true
+      });
+      if (!res.data.success) throw new Error("Failed to fetch songs");
+      const data = res.data.data;
+      set({ songs: data, isLoading: false });
+    } catch (error: any) {
+      set({ error: error.message, isLoading: false });
+    }finally{
+      set({ isLoading: false });
+    }
+  } 
 }));
