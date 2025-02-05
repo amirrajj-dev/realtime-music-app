@@ -10,9 +10,10 @@ import {
   IconButton,
   Avatar,
   useTheme,
-  keyframes,
+  Typography,
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { ISong } from "../interfaces/interface";
@@ -20,22 +21,16 @@ import { usePlayerStore } from "../store/usePlayerStore";
 
 interface SongTableProps {
   songs: ISong[];
-  onRowClick: (song: ISong) => void;
 }
 
-const SongTable: React.FC<SongTableProps> = ({ songs, onRowClick }) => {
+const SongTable: React.FC<SongTableProps> = ({ songs }) => {
   const theme = useTheme();
   const [hoveredRow, setHoveredRow] = React.useState<string | null>(null);
-  const { currentSong } = usePlayerStore();
-  
-  const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
+  const { currentSong, isPlaying, setCurrentSong } = usePlayerStore();
+
+  const handleRowClick = (song: ISong) => {
+    setCurrentSong(song);
+  };
 
   return (
     <TableContainer
@@ -59,65 +54,77 @@ const SongTable: React.FC<SongTableProps> = ({ songs, onRowClick }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {songs.map((song, index) => (
-            <TableRow
-              key={song._id}
-              onMouseEnter={() => setHoveredRow(song._id)}
-              onMouseLeave={() => setHoveredRow(null)}
-              onClick={() => onRowClick(song)}
-              sx={{
-                cursor: "pointer",
-                background: currentSong?._id === song._id ? theme.palette.primary.main : "inherit",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  backgroundColor: currentSong?._id === song._id ? theme.palette.secondary.main : theme.palette.action.hover,
-                },
-              }}
-            >
-              <TableCell>
-                {currentSong?._id === song._id ? (
-                  <IconButton sx={{ animation: `${rotate} 2s linear infinite` }}>
-                    <MusicNoteIcon sx={{ color: theme.palette.background.paper }} />
-                  </IconButton>
-                ) : hoveredRow === song._id ? (
-                  <IconButton>
-                    <PlayArrowIcon sx={{ color: theme.palette.primary.main }} />
-                  </IconButton>
-                ) : (
-                  index + 1
-                )}
-              </TableCell>
-              <TableCell
+          {songs.map((song, index) => {
+            const isCurrentSong = currentSong?._id === song._id;
+            const showPlayIcon = hoveredRow === song._id && !isCurrentSong;
+            const showPauseIcon = hoveredRow === song._id && isCurrentSong && isPlaying;
+            const showMusicNoteIcon = isCurrentSong && isPlaying && hoveredRow !== song._id;
+            const showIndex = !isCurrentSong || (isCurrentSong && !isPlaying);
+
+            return (
+              <TableRow
+                key={song._id}
+                onMouseEnter={() => setHoveredRow(song._id)}
+                onMouseLeave={() => setHoveredRow(null)}
+                onClick={() => handleRowClick(song)}
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  color: theme.palette.text.secondary,
+                  cursor: "pointer",
+                  background: isCurrentSong ? theme.palette.action.selected : "inherit",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    backgroundColor: theme.palette.action.hover,
+                  },
                 }}
               >
-                <Avatar
-                  src={song.imageUrl}
-                  alt={song.title}
+                <TableCell>
+                  {showPlayIcon ? (
+                    <IconButton>
+                      <PlayArrowIcon sx={{ color: theme.palette.primary.main }} />
+                    </IconButton>
+                  ) : showPauseIcon ? (
+                    <IconButton>
+                      <PauseIcon sx={{ color: theme.palette.primary.main }} />
+                    </IconButton>
+                  ) : showMusicNoteIcon ? (
+                    <IconButton>
+                      <MusicNoteIcon sx={{ color: theme.palette.primary.main }} />
+                    </IconButton>
+                  ) : showIndex ? (
+                    index + 1
+                  ) : null}
+                </TableCell>
+                <TableCell
                   sx={{
-                    marginRight: "16px",
-                    width: "50px",
-                    height: "50px",
-                    border: currentSong?._id === song._id ? `2px solid ${theme.palette.primary.main}` : "none",
+                    display: "flex",
+                    alignItems: "center",
+                    color: theme.palette.text.secondary,
                   }}
-                />
-                <div>
-                  <div style={{ color: theme.palette.text.primary }}>{song.title}</div>
-                  <div style={{ color: theme.palette.text.secondary }}>{song.artist}</div>
-                </div>
-              </TableCell>
-              <TableCell sx={{ color: theme.palette.text.secondary }}>
-                {new Date(song.createdAt as Date).toLocaleDateString()}
-              </TableCell>
-              <TableCell sx={{ color: theme.palette.text.secondary }}>
-                <AccessTimeIcon fontSize="small" sx={{ verticalAlign: "middle", marginRight: "4px" }} />
-                {Math.floor(song.duration / 60)}:{String(song.duration % 60).padStart(2, "0")}
-              </TableCell>
-            </TableRow>
-          ))}
+                >
+                  <Avatar
+                    src={song.imageUrl}
+                    alt={song.title}
+                    sx={{
+                      marginRight: "16px",
+                      width: "50px",
+                      height: "50px",
+                      border: isCurrentSong ? `2px solid ${theme.palette.primary.main}` : "none",
+                    }}
+                  />
+                  <div>
+                    <Typography sx={{ color: theme.palette.text.primary }}>{song.title}</Typography>
+                    <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>{song.artist}</Typography>
+                  </div>
+                </TableCell>
+                <TableCell sx={{ color: theme.palette.text.secondary }}>
+                  {new Date(song.createdAt as Date).toLocaleDateString()}
+                </TableCell>
+                <TableCell sx={{ color: theme.palette.text.secondary }}>
+                  <AccessTimeIcon fontSize="small" sx={{ verticalAlign: "middle", marginRight: "4px" }} />
+                  {Math.floor(song.duration / 60)}:{String(song.duration % 60).padStart(2, "0")}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
