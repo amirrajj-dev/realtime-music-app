@@ -6,6 +6,10 @@ interface PlayerStore {
   isPlaying: boolean;
   songs: ISong[];
   currentIndex: number;
+  currentTime : number;
+  setCurrentTime : (time : number)=>void;
+  duration : number;
+  setDuration : (time : number)=>void;
   setSongs: (songs: ISong[]) => void;
   setCurrentSong: (song: ISong) => void;
   togglePlay: () => void;
@@ -21,6 +25,14 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   isPlaying: false,
   songs: [],
   currentIndex: -1,
+  currentTime: 0,
+  duration: 0,
+  setCurrentTime: (time) => {
+    set({ currentTime: time });
+  },
+  setDuration: (duration) => {
+    set({ duration });
+  },
   setSongs: (songs) => {
     set({
       songs,

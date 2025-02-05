@@ -28,6 +28,7 @@ export const getFeaturedSongs = async (req, res) => {
       artist: 1,
       imageUrl: 1,
       audioUrl: 1,
+      duration : 1
     };
     const songs = await getRandomSongs(6, projection);
     res.status(200).json({ data: songs, success: true });

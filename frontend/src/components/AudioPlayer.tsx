@@ -4,25 +4,25 @@ import { usePlayerStore } from "../store/usePlayerStore";
 const AudioPlayer = () => {
   const audioPlayerRef = useRef<HTMLAudioElement>(null);
   const prevSongRef = useRef<string | null>(null);
-  const { currentSong, isPlaying, playNext } = usePlayerStore();
+  const { currentSong, isPlaying, playNext, setCurrentTime, setDuration } = usePlayerStore();
 
   useEffect(() => {
     const audio = audioPlayerRef.current;
     if (!audio) return;
 
-    const handlePlayPause = async () => {
+    const playAudio = async () => {
       try {
-        if (isPlaying) {
-          await audio.play();
-        } else {
-          await audio.pause();
-        }
+        await audio.play();
       } catch (error) {
-        console.error("Error playing or pausing audio:", error);
+        console.error("Error playing audio:", error);
       }
     };
 
-    handlePlayPause();
+    if (isPlaying) {
+      playAudio();
+    } else {
+      audio.pause();
+    }
   }, [isPlaying]);
 
   useEffect(() => {
@@ -33,35 +33,47 @@ const AudioPlayer = () => {
       playNext();
     };
 
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+    };
+
     audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+
     return () => {
       audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, [playNext]);
+  }, [playNext, setCurrentTime, setDuration]);
 
   useEffect(() => {
     const audio = audioPlayerRef.current;
     if (!audio || !currentSong) return;
 
-    const loadAndPlayAudio = async () => {
-      try {
-        if (prevSongRef.current !== currentSong.audioUrl) {
-          audio.pause();
-          audio.src = currentSong.audioUrl;
-          audio.load();
-          prevSongRef.current = currentSong.audioUrl;
-          audio.currentTime = 0;
+    if (prevSongRef.current !== currentSong.audioUrl) {
+      audio.pause();
+      audio.src = currentSong.audioUrl;
+      prevSongRef.current = currentSong.audioUrl;
+      audio.load();
+      audio.currentTime = 0;
 
-          if (isPlaying) {
-            await audio.play(); 
+      if (isPlaying) {
+        const playAudio = async () => {
+          try {
+            await audio.play();
+          } catch (error) {
+            console.error("Error playing audio:", error);
           }
-        }
-      } catch (error) {
-        console.error("Error loading and playing audio:", error);
+        };
+        playAudio();
       }
-    };
-
-    loadAndPlayAudio();
+    }
   }, [currentSong, isPlaying]);
 
   return <audio ref={audioPlayerRef} />;
