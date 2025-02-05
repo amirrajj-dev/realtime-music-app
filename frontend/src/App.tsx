@@ -11,6 +11,7 @@ import {ToastContainer} from 'react-toastify'
 import { useAuthStore } from "./store/useAuth";
 import MainLayout from "./components/MainLayout";
 import MainAlbum from "./pages/albums/mainalbum/MainAlbum";
+import AdminPage from "./pages/Admin/AdminPage";
 
 const App: React.FC = () => {
   const theme = useThemeStore((state) => state.theme);
@@ -35,6 +36,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/signup" element={user ? <Navigate to={'/'}/> : <SignUpPage />}></Route>
           <Route path="/signin" element={user ? <Navigate to={'/'} /> : <SignInPage/>}></Route>
+          <Route path="admin" element={user?.email === 'amiramraja@gmail.com' ? <AdminPage/> : <Navigate to={'/'} />} />
           <Route element={<MainLayout/>}>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/albums/:id" element={<MainAlbum/>} />
