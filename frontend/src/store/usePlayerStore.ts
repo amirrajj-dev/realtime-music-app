@@ -4,6 +4,8 @@ import { ISong } from '../interfaces/interface';
 interface PlayerStore {
   currentSong: ISong | null;
   isPlaying: boolean;
+  isShuffle: boolean;
+  shuffledSongs : ISong[];
   songs: ISong[];
   currentIndex: number;
   currentTime : number;
@@ -18,12 +20,15 @@ interface PlayerStore {
   playAlbum: (songs: ISong[], startIndex?: number) => void;
   playNext: () => void;
   playPrevious: () => void;
+  toggleShuffle: () => void;
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentSong: null,
   isPlaying: false,
+  isShuffle: false,
   songs: [],
+  shuffledSongs : [],
   currentIndex: -1,
   currentTime: 0,
   duration: 0,
@@ -64,10 +69,12 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     set({ isPlaying: false });
   },
   playNext: () => {
-    const { currentIndex, songs } = get();
-    if (!songs.length) return;
-    const nextIndex = (currentIndex + 1) % songs.length;
-    const nextSong = songs[nextIndex];
+    const { currentIndex, songs , isShuffle , shuffledSongs } = get();
+    const playlist = isShuffle && shuffledSongs.length ? shuffledSongs : songs;
+    console.log(isShuffle , shuffledSongs.length);
+    if (!playlist.length) return;
+    const nextIndex = (currentIndex + 1) % playlist.length;
+    const nextSong = playlist[nextIndex];
     set({
       currentIndex: nextIndex,
       currentSong: nextSong,
@@ -75,10 +82,11 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     });
   },
   playPrevious: () => {
-    const { currentIndex, songs } = get();
-    if (!songs.length) return;
-    const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
-    const prevSong = songs[prevIndex];
+    const { currentIndex, songs ,  isShuffle , shuffledSongs } = get();
+    const playlist = isShuffle && shuffledSongs.length ? shuffledSongs : songs;
+    if (!playlist.length) return;
+    const prevIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+    const prevSong = playlist[prevIndex];
     set({
       currentIndex: prevIndex,
       currentSong: prevSong,
@@ -92,6 +100,18 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       currentSong: songs[startIndex],
       currentIndex: startIndex,
       isPlaying: true,
+    });
+  },
+  toggleShuffle: () => {
+    set((state) => {
+      const isShuffle = !state.isShuffle;
+      if (isShuffle) {
+        const shuffled = [...state.songs].sort(() => Math.random() - 0.5);
+        set({ shuffledSongs: shuffled });
+      } else {
+        set({ shuffledSongs: [] });
+      }
+      return { isShuffle };
     });
   },
 }));

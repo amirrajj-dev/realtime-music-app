@@ -16,6 +16,7 @@ import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded';
 import SkipPreviousRoundedIcon from '@mui/icons-material/SkipPreviousRounded';
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import VolumeOffRoundedIcon from '@mui/icons-material/VolumeOffRounded';
+import ShuffleIcon from '@mui/icons-material/Shuffle';
 
 const PlaybackControl: React.FC = () => {
   const theme = useTheme();
@@ -30,6 +31,8 @@ const PlaybackControl: React.FC = () => {
     duration,
     setCurrentTime,
     setDuration,
+    isShuffle,
+    toggleShuffle
   } = usePlayerStore();
 
   const [volume, setVolume] = useState<number>(0.8);
@@ -181,6 +184,9 @@ const PlaybackControl: React.FC = () => {
                   </IconButton>
                   <IconButton onClick={playNext}>
                     <SkipNextRoundedIcon fontSize="large" />
+                  </IconButton>
+                  <IconButton onClick={toggleShuffle} color={isShuffle ? 'primary' : 'default'}>
+                    <ShuffleIcon fontSize="large" />
                   </IconButton>
                 </Box>
                 <Box
