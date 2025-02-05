@@ -26,15 +26,17 @@ import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import { usePlayerStore } from "../../../store/usePlayerStore";
 import AudioPlayer from "../../../components/AudioPlayer";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
-import PauseIcon from '@mui/icons-material/Pause';
+import PauseIcon from "@mui/icons-material/Pause";
+import { ISong } from "../../../interfaces/interface";
 
 const MainAlbum = () => {
   const { id } = useParams();
   const { getAlbumById, isLoading, mainAlbum } = useMusicStore();
   const theme = useTheme();
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const { setCurrentSong, togglePlay, isPlaying, playAlbum, currentSong } =
+  const { setCurrentSong, isPlaying, playAlbum, currentSong , togglePlay } =
     usePlayerStore();
+    
   useEffect(() => {
     getAlbumById(id as string);
   }, [id, getAlbumById]);
@@ -71,14 +73,18 @@ const MainAlbum = () => {
     );
   }
 
-  const handleRowClick = (song) => {
+  const handleRowClick = (song: ISong) => {
     setCurrentSong(song);
   };
 
   const handlePlayAlbum = () => {
-    console.log(mainAlbum.songs);
-    console.log(currentSong);
     playAlbum(mainAlbum.songs, 0);
+  };
+
+  const handlePauseSong = () => {
+    if (isPlaying) {
+      togglePlay()
+    }
   };
 
   const rotate = keyframes`
@@ -157,13 +163,9 @@ const MainAlbum = () => {
               transform: "scale(1.1)",
             },
           }}
-          onClick={() => handlePlayAlbum()}
+          onClick={isPlaying ? handlePauseSong : handlePlayAlbum}
         >
-          {isPlaying ? (
-            <PauseIcon  />
-          ) : (
-            <PlayArrowOutlinedIcon onClick={handlePlayAlbum} />
-          )}
+          {isPlaying ? <PauseIcon /> : <PlayArrowOutlinedIcon />}
         </IconButton>
       </Card>
       <TableContainer
@@ -207,7 +209,7 @@ const MainAlbum = () => {
                     currentSong?._id === song._id
                       ? theme.palette.primary.main
                       : "inherit",
-                
+
                   transition: "all 0.3s ease-in-out",
                   "&:hover": {
                     backgroundColor:
@@ -219,7 +221,9 @@ const MainAlbum = () => {
               >
                 <TableCell>
                   {currentSong?._id === song._id ? (
-                    <IconButton sx={{animation : `${rotate} 2s linear infinite`}}>
+                    <IconButton
+                      sx={{ animation: `${rotate} 2s linear infinite` }}
+                    >
                       <MusicNoteIcon
                         sx={{ color: theme.palette.background.paper }}
                       />
