@@ -71,7 +71,6 @@ export const useMusicStore = create<SongStore>((set) => ({
     try {
       set({ isLoading: true });
       const res = await axiosInstance.get(`/songs/made-for-you-songs`);
-      console.log(res);
       if (!res.data.success) throw new Error("Failed to fetch made for you songs");
       const data = res.data.data;
       set({ madeForYouSongs: data, isLoading: false });

@@ -21,10 +21,8 @@ const TrendingSongs: React.FC = () => {
           ? Array.from(new Array(4)).map((_, index) => <MusicCardSkeleton key={index} />)
           : trendingSongs.map((song) => (
               <MusicCard
-                key={song._id}
-                title={song.title}
-                artist={song.artist}
-                imageUrl={song.imageUrl}
+               key={song._id}
+               {...song}
               />
             ))}
       </div>

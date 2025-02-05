@@ -6,7 +6,6 @@ import { Typography } from "@mui/material";
 
 const FeaturedSongs: React.FC = () => {
   const { featuredSongs, getFeaturedSongs, isLoading } = useMusicStore();
-
   useEffect(() => {
     getFeaturedSongs();
   }, [getFeaturedSongs]);
@@ -22,9 +21,7 @@ const FeaturedSongs: React.FC = () => {
           : featuredSongs.map((song) => (
               <MusicCard
                 key={song._id}
-                title={song.title}
-                artist={song.artist}
-                imageUrl={song.imageUrl}
+                {...song}
               />
             ))}
       </div>
