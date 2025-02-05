@@ -3,16 +3,14 @@ import { useMusicStore } from "../../../store/useMusic";
 import { useEffect } from "react";
 import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
 import { usePlayerStore } from "../../../store/usePlayerStore";
-import AudioPlayer from "../../../components/AudioPlayer";
 import AlbumDetails from "../../../components/AlbumDetails";
 import SongTable from "../../../components/SongTable";
-import { ISong } from "../../../interfaces/interface";
 
 const MainAlbum = () => {
   const { id } = useParams();
   const { getAlbumById, isLoading, mainAlbum } = useMusicStore();
   const theme = useTheme();
-  const { setCurrentSong, isPlaying, playAlbum, togglePlay } = usePlayerStore();
+  const { playAlbum, isPlaying, togglePlay } = usePlayerStore();
 
   useEffect(() => {
     getAlbumById(id as string);
@@ -50,10 +48,6 @@ const MainAlbum = () => {
     );
   }
 
-  const handleRowClick = (song: ISong) => {
-    setCurrentSong(song);
-  };
-
   const handlePlayAlbum = () => {
     playAlbum(mainAlbum.songs, 0);
   };
@@ -84,8 +78,7 @@ const MainAlbum = () => {
         playAlbum={handlePlayAlbum}
         pauseSong={handlePauseSong}
       />
-      <SongTable songs={mainAlbum.songs} onRowClick={handleRowClick} />
-      <AudioPlayer />
+      <SongTable songs={mainAlbum.songs} />
     </Box>
   );
 };

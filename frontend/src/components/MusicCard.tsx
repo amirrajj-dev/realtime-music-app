@@ -8,10 +8,10 @@ import {
   useTheme,
 } from "@mui/material";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
-import AudioPlayer from "./AudioPlayer";
+import PauseIcon from "@mui/icons-material/Pause";
 import { usePlayerStore } from "../store/usePlayerStore";
+import { useMusicStore } from "../store/useMusic";
 import { ISong } from "../interfaces/interface";
-import PauseIcon from '@mui/icons-material/Pause';
 
 const MusicCard: React.FC<ISong> = ({
   title,
@@ -26,26 +26,40 @@ const MusicCard: React.FC<ISong> = ({
 }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
-  const { setCurrentSong , currentSong , isPlaying , togglePlay } = usePlayerStore();
 
-  const handlePlaySong = () => {
-    const song = {
-      title,
-      artist,
-      audioUrl,
-      imageUrl,
-      _id,
-      albumId,
-      duration,
-      createdAt,
-      updatedAt,
-    };
-    setCurrentSong(song);
+  const { featuredSongs } = useMusicStore();
+
+  const {
+    setCurrentSong,
+    currentSong,
+    isPlaying,
+    togglePlay,
+    songs,
+    setSongs,
+  } = usePlayerStore();
+
+  const handlePlayPause = () => {
+    if (songs.length === 0) {
+      setSongs(featuredSongs);
+    }
+
+    if (currentSong?._id === _id) {
+      togglePlay();
+    } else {
+      setCurrentSong({
+        title,
+        artist,
+        audioUrl,
+        imageUrl,
+        _id,
+        albumId,
+        duration,
+        createdAt,
+        updatedAt,
+      });
+      setSongs(featuredSongs);
+    }
   };
-
-  const handlePauseSong = ()=>{
-    togglePlay()
-  }
 
   return (
     <Card className="relative group w-full sm:max-w-sm rounded-lg overflow-hidden shadow-lg transform transition duration-300 hover:scale-105">
@@ -57,37 +71,29 @@ const MusicCard: React.FC<ISong> = ({
           className="w-full h-56 object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-80 transition-opacity duration-500"></div>
-       {isPlaying && currentSong?._id === _id  ? (
-         <IconButton
-         onClick={handlePauseSong}
-           className="absolute inset-0 flex items-center justify-center transition-opacity duration-500"
-           aria-label={`Play ${title} by ${artist}`}
-           sx={{
-             color: isDarkMode ? "#fff" : "#fff",
-             fontSize: "4rem",
-           }}
-         >
-           <PauseIcon
-             fontSize="inherit"
-             className="drop-shadow-lg animate-scale-up"
-           />
-         </IconButton>
-       ) : (
         <IconButton
-        onClick={handlePlaySong}
-          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          onClick={handlePlayPause}
+          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${
+            currentSong?._id === _id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+          }`}
           aria-label={`Play ${title} by ${artist}`}
           sx={{
             color: isDarkMode ? "#fff" : "#fff",
             fontSize: "4rem",
           }}
         >
-          <PlayCircleFilledWhiteIcon
-            fontSize="inherit"
-            className="drop-shadow-lg animate-scale-up"
-          />
+          {currentSong?._id === _id && isPlaying ? (
+            <PauseIcon
+              fontSize="inherit"
+              className="drop-shadow-lg animate-scale-up"
+            />
+          ) : (
+            <PlayCircleFilledWhiteIcon
+              fontSize="inherit"
+              className="drop-shadow-lg animate-scale-up"
+            />
+          )}
         </IconButton>
-       )}
       </div>
       <CardContent className="text-center p-4 bg-white dark:bg-gray-900">
         <Typography
@@ -104,7 +110,6 @@ const MusicCard: React.FC<ISong> = ({
           {artist}
         </Typography>
       </CardContent>
-      <AudioPlayer />
     </Card>
   );
 };
