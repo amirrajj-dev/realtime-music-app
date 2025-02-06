@@ -18,6 +18,7 @@ interface SongStore {
   error: null | string;
   isLoading: boolean;
   deleteSong : (id : string) => Promise<{message : string , success : boolean}>;
+  deleteAlbum : (id : string) => Promise<{message : string , success : boolean}>;
 }
 
 export const useMusicStore = create<SongStore>((set) => ({
@@ -120,6 +121,26 @@ export const useMusicStore = create<SongStore>((set) => ({
         withCredentials : true
       })
       if (!res.data.success) throw new Error('Failed to delete song');
+      return {
+        message : res.data.message,
+        success : res.data.success
+      }
+    } catch (error : any) {
+      return {
+        message : error.message,
+        success : false
+      }
+    }
+  },
+  deleteAlbum : async (id : string)=>{
+    try {
+      if (!id){
+      throw new Error('no id has been provided');
+      }
+      const res = await axiosInstance.delete(`/admin/delete-album/${id}` , {
+        withCredentials : true
+      })
+      if (!res.data.success) throw new Error('Failed to delete album');
       return {
         message : res.data.message,
         success : res.data.success
