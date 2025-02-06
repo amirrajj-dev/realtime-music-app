@@ -7,6 +7,7 @@ interface StatsStore {
     artistsCount: number;
     usersCount: number;
     getStats : ()=>Promise<void>
+    isLoading : boolean
 }
 
 export const useStatsStore = create<StatsStore>((set)=>({
@@ -14,8 +15,10 @@ export const useStatsStore = create<StatsStore>((set)=>({
     songsCount: 0,
     artistsCount: 0,
     usersCount: 0,
+    isLoading : false,
     getStats: async () => {
         try {
+            set({isLoading : true})
             const res = await axiosInstance.get('/stats' , {
                 withCredentials : true
             });
@@ -26,11 +29,14 @@ export const useStatsStore = create<StatsStore>((set)=>({
                     artistsCount: res.data.data.artistsCount,
                     usersCount: res.data.data.usersCount
                 })
+                set({isLoading : false})
             }else{
                 throw new Error('failed to fetch stats')
             }
         } catch (error : any) {
             console.error(error.message);
+        }finally{
+            set({isLoading : false})
         }
     }
 }))
