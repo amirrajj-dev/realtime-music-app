@@ -11,12 +11,18 @@ import fileUpload from 'express-fileupload'
 import path from 'path'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import { createServer } from 'http'
+import { initializeSocket } from './utils/socket.js'
 
 dotenv.config()
 const app = express()
 const port = process.env.PORT
 app.use(express.json())
 app.use(cookieParser())
+
+const httpServer = createServer(app)
+initializeSocket(httpServer)
+
 app.use(cors({
     origin: 'http://localhost:4000',
     credentials: true
@@ -39,7 +45,7 @@ app.use('/api/songs' , songRoutes)
 app.use('/api/albums' , albumRoutes)
 app.use('/api/stats' , statRoutes)
 
-app.listen(port , async ()=>{
+httpServer.listen(port , async ()=>{
     await connectToDb()
     console.log(`Server is running on port ${port}`)
 })
