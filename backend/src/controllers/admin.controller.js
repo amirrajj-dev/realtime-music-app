@@ -108,8 +108,8 @@ export const addAlbum = async (req, res) => {
     const album = new albumsModel({
       title,
       artist,
-      releaseDate,
-      imageURL: imageUrl,
+      releaseYear: releaseDate,
+      imageUrl: imageUrl,
     });
     await album.save();
     res.status(201).json({

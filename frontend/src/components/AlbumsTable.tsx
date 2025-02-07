@@ -7,7 +7,7 @@ import AddAlbumModal from "./AddAlbumModal";
 
 interface AlbumsTableProps {
   albums: IAlbum[];
-  addAlbum: () => void;
+  addAlbum: (album : Partial<IAlbum>) => void;
   deleteAlbum: (id: string) => void;
   isLoading : boolean
 }

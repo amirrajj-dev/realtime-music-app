@@ -7,15 +7,13 @@ import SongsTable from "../../components/SongsTable";
 import AlbumsTable from "../../components/AlbumsTable";
 import StatsCards from "../../components/StatsCard";
 import { toast, ToastOptions } from "react-toastify";
-import { ISong } from "../../interfaces/interface";
+import { IAlbum, ISong } from "../../interfaces/interface";
 import { axiosInstance } from "../../configs/axios";
 
 const AdminPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const {
-    getStats
-  } = useStatsStore();
+  const { getStats } = useStatsStore();
   const {
     albums,
     getAlbums,
@@ -79,38 +77,83 @@ const AdminPage = () => {
     }
   };
 
-  const handleAddSong = async (song : ISong) =>{
+  const handleAddSong = async (song: ISong) => {
     console.log(song);
-    if (!song.title || !song.artist || !song.imageUrl || !song.duration || !song.audioUrl){
-      toast.error('All fields are required', toastOptions as ToastOptions)
+    if (
+      !song.title ||
+      !song.artist ||
+      !song.imageUrl ||
+      !song.duration ||
+      !song.audioUrl
+    ) {
+      toast.error("All fields are required", toastOptions as ToastOptions);
       return;
     }
-    const formdata = new FormData()
-    formdata.append('title', song.title)
-    formdata.append('artist', song.artist)
-    formdata.append('imageFile', song.imageUrl)
-    formdata.append('duration', song.duration.toString())
-    formdata.append('audioFile', song.audioUrl)
-    if (song.albumId){
-      formdata.append('albumId', song.albumId)
+    const formdata = new FormData();
+    formdata.append("title", song.title);
+    formdata.append("artist", song.artist);
+    formdata.append("imageFile", song.imageUrl);
+    formdata.append("duration", song.duration.toString());
+    formdata.append("audioFile", song.audioUrl);
+    if (song.albumId) {
+      formdata.append("albumId", song.albumId);
     }
-    const res = await axiosInstance.post('/admin/add-song' , formdata , {
+    const res = await axiosInstance.post("/admin/add-song", formdata, {
       withCredentials: true,
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      timeout : 60000 // 1 min
-    })
-    if (res.data.success){
+      timeout: 60000, // 1 min
+    });
+    if (res.data.success) {
       toast.success(res.data.message, toastOptions as ToastOptions);
       getAlbums();
       getSongs();
       getStats();
-    }else{
-      console.log('yes');
-      toast.error(res.response.data.error.message || res.data.error.message, toastOptions as ToastOptions);
+    } else {
+      console.log("yes");
+      toast.error(
+        res.response.data.error.message || res.data.error.message,
+        toastOptions as ToastOptions
+      );
     }
-  }
+  };
+
+  const handleAddAlbum = async (album: Partial<IAlbum>) => {
+    if (
+      !album.title ||
+      !album.artist ||
+      !album.imageUrl ||
+      !album.releaseYear
+    ) {
+      toast.error("All fields are required", toastOptions as ToastOptions);
+      return;
+    }
+    const formdata = new FormData();
+    formdata.append("title", album.title);
+    formdata.append("artist", album.artist);
+    formdata.append("imageFile", album.imageUrl);
+    formdata.append("releaseDate", album.releaseYear.toString());
+    const res = await axiosInstance.post("/admin/add-album", formdata, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      timeout: 60000, // 1 min
+    });
+    console.log(res);
+    if (res.data.success) {
+      toast.success(res.data.message, toastOptions as ToastOptions);
+      getAlbums();
+      getStats();
+    } else {
+      console.log("yes");
+      toast.error(
+        res.response.data.error.message || res.data.error.message,
+        toastOptions as ToastOptions
+      );
+    }
+  };
 
   return (
     <Box
@@ -149,6 +192,7 @@ const AdminPage = () => {
 
       {activeTab === 1 && (
         <AlbumsTable
+          addAlbum={handleAddAlbum}
           albums={albums}
           deleteAlbum={handleDeleteAlbum}
           isLoading={isLoadingMusic}
