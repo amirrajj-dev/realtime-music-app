@@ -1,25 +1,28 @@
 import { Avatar, Box, Button, IconButton, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useTheme } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { ISong } from "../interfaces/interface";
+import { IAlbum, ISong } from "../interfaces/interface";
+import AddSongsModal from "./AddSongModal";
 
 interface SongsTableProps {
     songs: ISong[],
-    addSong: () => void,
+    addSong: (song : ISong) => void,
     deleteSong: (id: string) => void
-    isLoading : boolean
+    isLoading : boolean,
+    albums : IAlbum[]
 }
 
-const SongsTable: React.FC<SongsTableProps> = ({ addSong, deleteSong, songs , isLoading }) => {
+const SongsTable: React.FC<SongsTableProps> = ({ addSong, deleteSong, songs , isLoading , albums }) => {
   const theme = useTheme();
+  const [isOpen , setIsOpen] = useState(false)
   
   return (
     <Box sx={{ p: 3, bgcolor: theme.palette.background.paper, borderRadius: 2, boxShadow: 3 }}>
       <Button 
         variant="contained" 
         startIcon={<AddIcon />} 
-        onClick={addSong}
+        onClick={()=>setIsOpen(true)}
         sx={{ mb: 2, bgcolor: theme.palette.primary.main, '&:hover': { bgcolor: theme.palette.primary.dark } }}
       >
         Add Song
@@ -69,6 +72,7 @@ const SongsTable: React.FC<SongsTableProps> = ({ addSong, deleteSong, songs , is
           </TableBody>
         </Table>
       </TableContainer>
+      <AddSongsModal open={isOpen} albums={albums} onClose={()=>setIsOpen(false)} onAddSong={addSong} />
     </Box>
   );
 };

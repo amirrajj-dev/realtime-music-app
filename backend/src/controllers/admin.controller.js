@@ -28,13 +28,13 @@ export const addSong = async (req, res) => {
     }
     const audioFile = req.files.audioFile;
     const imageFile = req.files.imageFile;
-    const audioUrl = uploadToCloudinary(audioFile);
-    const imageUrl = uploadToCloudinary(imageFile);
+    const audioUrl = await uploadToCloudinary(audioFile);
+    const imageUrl = await uploadToCloudinary(imageFile);
     const song = new songssModel({
       title,
       artist,
       albumId: albumId || null,
-      duration,
+      duration: +duration,
       audioUrl,
       imageUrl,
     });
