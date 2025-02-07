@@ -104,7 +104,7 @@ export const addAlbum = async (req, res) => {
         .json({ message: "Missing required fields", success: false });
     }
     const imageFile = req.files.imageFile;
-    const imageUrl = uploadToCloudinary(imageFile);
+    const imageUrl = await uploadToCloudinary(imageFile);
     const album = new albumsModel({
       title,
       artist,
