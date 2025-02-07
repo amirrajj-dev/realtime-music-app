@@ -122,7 +122,7 @@ const TopBar = () => {
                   onClose={handleMenuClose}
                 >
                   <MenuItem>{user.email}</MenuItem>
-                  {isMobile && isAdmin && <MenuItem>Admin Dashboard</MenuItem>}
+                  {isMobile && isAdmin && <Link to={'/admin'}><MenuItem>Admin Dashboard</MenuItem></Link>}
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>
