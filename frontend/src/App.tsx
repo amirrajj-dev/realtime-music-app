@@ -12,6 +12,7 @@ import { useAuthStore } from "./store/useAuth";
 import MainLayout from "./components/MainLayout";
 import MainAlbum from "./pages/albums/mainalbum/MainAlbum";
 import AdminPage from "./pages/Admin/AdminPage";
+import ChatPage from "./pages/chat/ChatPage";
 
 const App: React.FC = () => {
   const theme = useThemeStore((state) => state.theme);
@@ -40,6 +41,7 @@ const App: React.FC = () => {
           <Route element={<MainLayout/>}>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/albums/:id" element={<MainAlbum/>} />
+          <Route path="/chat" element={<ChatPage/>} />
           </Route>
         </Routes>
         <ToastContainer/>
