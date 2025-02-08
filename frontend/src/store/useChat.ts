@@ -13,6 +13,8 @@ interface ChatStore{
     onlineUsers : Set<string>;
     getOnlineUsers : ()=>Promise<void>,
     userActivities : Map<string , string>,
+    selectedUser : IUser | null,
+    setSelectedUser : (user : IUser) => void
     messages : IMessage[],
     initSocket : (userId : string)=>void,
     disconnectSocket : ()=>void
@@ -36,6 +38,8 @@ export const useChatStore = create<ChatStore>((set , get) => ({
     onlineUsers: new Set<string>(),
     userActivities: new Map<string, string>(),
     messages: [],
+    selectedUser : null,
+    setSelectedUser : (user)=>set({selectedUser: user}),
     getUsers: async () => {
         try {
             set({ isLoading: true });
