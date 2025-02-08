@@ -36,7 +36,6 @@ const SignIn = () => {
       toast.error('password must be at least 6 characters long' , toastOptions as ToastOptions)
       return;
     }
-    console.log(formdata);
     const res = await signin(formdata)
     if (res!.success){
       toast.success('welcome back :)' , toastOptions as ToastOptions)

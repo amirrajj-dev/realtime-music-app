@@ -52,7 +52,6 @@ export const useAuthStore = create<AuthStore>((set , get) => ({
       const res = await axiosInstance.post('/auth/signout' , {} , {
         withCredentials : true
       })
-      console.log(res);
       if (res.data.success) {
         set({ user: null, error: null, isLoading: false , isAdmin : false });
         return {

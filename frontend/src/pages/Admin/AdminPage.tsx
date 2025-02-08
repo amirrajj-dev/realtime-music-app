@@ -49,7 +49,6 @@ const AdminPage = () => {
     const isSure = confirm("Are you sure you want to delete this song?");
     if (isSure) {
       const res = await deleteSong(id);
-      console.log(res);
       if (res.success) {
         toast.success(res.message, toastOptions as ToastOptions);
         getAlbums();
@@ -65,7 +64,6 @@ const AdminPage = () => {
     const isSure = confirm("Are you sure you want to delete this album?");
     if (isSure) {
       const res = await deleteAlbum(id);
-      console.log(res);
       if (res.success) {
         toast.success(res.message, toastOptions as ToastOptions);
         getAlbums();
@@ -78,7 +76,6 @@ const AdminPage = () => {
   };
 
   const handleAddSong = async (song: ISong) => {
-    console.log(song);
     if (
       !song.title ||
       !song.artist ||
@@ -111,7 +108,6 @@ const AdminPage = () => {
       getSongs();
       getStats();
     } else {
-      console.log("yes");
       toast.error(
         res.response.data.error.message || res.data.error.message,
         toastOptions as ToastOptions
@@ -141,13 +137,11 @@ const AdminPage = () => {
       },
       timeout: 60000, // 1 min
     });
-    console.log(res);
     if (res.data.success) {
       toast.success(res.data.message, toastOptions as ToastOptions);
       getAlbums();
       getStats();
     } else {
-      console.log("yes");
       toast.error(
         res.response.data.error.message || res.data.error.message,
         toastOptions as ToastOptions

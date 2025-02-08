@@ -115,9 +115,7 @@ export const signIn = async (req, res) => {
 };
 
 export const signOut = async (req, res) => {
-  console.log('yes');
   try {
-    console.log(res.cookie['music-app-token']);
     res.cookie('music-app-token' , '' , {
       expires : new Date(0),
       maxAge : 0
