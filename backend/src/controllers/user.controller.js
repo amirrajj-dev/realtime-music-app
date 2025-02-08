@@ -55,7 +55,7 @@ export const getMessages = async (req, res) => {
         { senderId: currentUser._id, receiverId: userId },
         { senderId: userId, receiverId: currentUser._id },
       ],
-    }).sort({_id : -1})
+    }).sort({_id : 1})
 console.log(messages);
     return res.status(200).json({
       data : messages,
