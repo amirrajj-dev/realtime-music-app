@@ -1,7 +1,9 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useEffect, useState, ReactNode } from "react";
 import { axiosInstance } from "../configs/axios";
 import SyncIcon from '@mui/icons-material/Sync';
 import {useNavigate} from 'react-router-dom'
+import { useChatStore } from "../store/useChat";
+import { useAuthStore } from "../store/useAuth";
 
 interface AuthContextType {
   isLoading: boolean;
@@ -12,6 +14,9 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate()
+  const {initSocket , disconnectSocket} = useChatStore()
+  const {user} = useAuthStore()
+  console.log(user);
 
   useEffect(() => {
     const getToken = async () => {
@@ -22,6 +27,10 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
         if (res.data.token) {
           axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+          const userId = String(user?._id)
+          if (userId){
+            initSocket(userId)
+          }
         } else {
           navigate('/signin', { replace: true }); // Redirect to signin page on token not found
         }
@@ -34,7 +43,9 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     };
     getToken();
-  }, []);
+
+    return ()=>disconnectSocket()
+  }, [disconnectSocket , initSocket , user , navigate]);
 
   if (loading){
     return (
@@ -49,10 +60,6 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuthContext = () => {
-  return useContext(AuthContext);
 };
 
 export default AuthContextProvider;
