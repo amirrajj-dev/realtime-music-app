@@ -97,6 +97,12 @@ export const useChatStore = create<ChatStore>((set , get) => ({
             set({ isConnected: true });
         }
     },
-    disconnectSocket: () => {},
+
+    disconnectSocket: () => {
+        if (get().isConnected){
+            socket.disconnect();
+            set({ isConnected: false });
+        }
+    },
     sendMessage: (senderId : string, receiverId : string, content : string) => {}
 }))
