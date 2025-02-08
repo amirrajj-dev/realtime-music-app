@@ -1,10 +1,12 @@
-import React from 'react';
-import { Box, List, ListItem, Avatar, Divider, Tooltip, Skeleton, useTheme, useMediaQuery } from '@mui/material';
+import { Box, List, ListItem, Avatar, Divider, Tooltip, Skeleton, Badge, useTheme, useMediaQuery } from '@mui/material';
 import { IUser } from '../../../interfaces/interface';
+import { useChatStore } from '../../../store/useChat';
 
 const Sidebar = ({ users, selectUser, loading } : {users : IUser[], selectUser : (user : IUser)=>void, loading: boolean}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { onlineUsers } = useChatStore();
 
   return (
     <Box
@@ -16,7 +18,7 @@ const Sidebar = ({ users, selectUser, loading } : {users : IUser[], selectUser :
         backgroundColor: theme.palette.background.paper,
         borderRadius: '8px',
         boxShadow: 3,
-        width : '13%',
+        width : '13%'
       }}
     >
       <List>
@@ -33,10 +35,18 @@ const Sidebar = ({ users, selectUser, loading } : {users : IUser[], selectUser :
           users.map(user => (
             <Box key={user._id} sx={{ padding: '8px' , borderRadius: '8px', '&:hover': { backgroundColor: theme.palette.action.hover , cursor : 'pointer' } }}>
               <Tooltip title={user.fullname} placement="right" sx={{display : 'flex' , alignItems : 'center' , justifyContent : 'center'}}>
-                <ListItem button onClick={() => selectUser(user)}>
-                  <Avatar sx={{ backgroundColor: theme.palette.primary.main }}>
-                    {user.fullname.split(" ")[0][0]}
-                  </Avatar>
+                <ListItem onClick={() => selectUser(user)}>
+                  <Badge
+                    color="info"
+                    variant="dot"
+                    invisible={!onlineUsers.has(String(user._id))}
+                    overlap="circular"
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  >
+                    <Avatar sx={{ backgroundColor: theme.palette.primary.main }}>
+                      {user.fullname.split(" ")[0][0]}
+                    </Avatar>
+                  </Badge>
                 </ListItem>
               </Tooltip>
               <Divider />

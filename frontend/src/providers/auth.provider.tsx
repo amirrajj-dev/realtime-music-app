@@ -16,7 +16,6 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const navigate = useNavigate()
   const {initSocket , disconnectSocket} = useChatStore()
   const {user} = useAuthStore()
-  console.log(user);
 
   useEffect(() => {
     const getToken = async () => {
@@ -27,7 +26,7 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
         if (res.data.token) {
           axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
-          const userId = String(user?._id)
+          const userId = String(user.id)
           if (userId){
             initSocket(userId)
           }
