@@ -104,5 +104,9 @@ export const useChatStore = create<ChatStore>((set , get) => ({
             set({ isConnected: false });
         }
     },
-    sendMessage: (senderId : string, receiverId : string, content : string) => {}
+    sendMessage: async (senderId : string, receiverId : string, content : string) => {
+        const socket = get().socket
+        if (!socket) return
+        socket.emit('send_message', { senderId, receiverId, content });
+    }
 }))
