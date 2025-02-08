@@ -18,7 +18,7 @@ export const initializeSocket = (server) => {
       userActivities.set(userId, "Idle");
       io.emit("user_connected", userId);
       socket.emit("online_users", Array.from(userSockets.keys()));
-      io.emit("activities", Array.from(userActivities.keys()));
+      io.emit("activities", Array.from(userActivities.entries()));
     });
 
     socket.on("update_activities", ({ userId, activity }) => {

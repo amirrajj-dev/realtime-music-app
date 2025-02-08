@@ -1,5 +1,5 @@
 import { usersModel } from "../models/user.model.js";
-
+import {messagesModel} from '../models/message.model.js'
 export const getUsers = async (req, res) => {
   try {
     const currentUser = req.user;
