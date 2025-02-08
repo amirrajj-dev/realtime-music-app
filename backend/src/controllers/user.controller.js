@@ -53,14 +53,14 @@ export const getMessages = async (req, res) => {
     const messages = await messagesModel.find({
       $or: [
         { senderId: currentUser._id, receiverId: userId },
-        { senderId: userId, receiver: currentUser._id },
+        { senderId: userId, receiverId: currentUser._id },
       ],
     }).sort({_id : -1})
-
-    return {
-        data : messages,
-        success : true
-    }
+console.log(messages);
+    return res.status(200).json({
+      data : messages,
+      success : true
+  }) 
 
   } catch (error) {
     res
