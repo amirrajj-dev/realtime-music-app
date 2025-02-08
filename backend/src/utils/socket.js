@@ -35,7 +35,7 @@ export const initializeSocket = (server) => {
         const message = await messagesModel.create({
           senderId,
           receiverId,
-          content,
+          message : content,
         });
         const receiverSocketId = userSockets.get(receiverId);
         if (receiverSocketId) {
