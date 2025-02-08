@@ -17,11 +17,11 @@ const AddAlbumModal: React.FC<AddAlbumModalProps> = ({ open, onClose, onAddAlbum
   const [artist, setArtist] = useState('');
   const [releaseYear, setReleaseYear] = useState('');
   const [imageUrl, setImageUrl] = useState<File | null | string>(null);
-  const [demo , setDemo] = useState('')
+  const [demo , setDemo] = useState('');
   const theme = useTheme();
 
   const handleAddAlbum = () => {
-    onAddAlbum({ title : albumTitle, artist, releaseYear: +releaseYear , imageUrl: imageUrl as string});
+    onAddAlbum({ title: albumTitle, artist, releaseYear: +releaseYear, imageUrl: imageUrl as string });
     onClose();
   };
 
@@ -73,9 +73,9 @@ const AddAlbumModal: React.FC<AddAlbumModalProps> = ({ open, onClose, onAddAlbum
                 hidden
                 accept="image/*"
                 onChange={(e) => {
-                  const file = e.target!.files[0];
+                  const file = e.target?.files?.[0] || null;
                   if (file) {
-                  setImageUrl(file)
+                    setImageUrl(file);
                     const reader = new FileReader();
                     reader.onloadend = () => {
                       setDemo(reader.result as string);

@@ -17,8 +17,8 @@ const AddSongsModal: React.FC<AddSongsModalProps> = ({ open, onClose, onAddSong 
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
   const [duration, setDuration] = useState('');
-  const [audioUrl, setAudioUrl] = useState('');
-  const [imageUrl, setImageUrl] = useState<File | null>(null);
+  const [audioUrl, setAudioUrl] = useState<File | null | string>('');
+  const [imageUrl, setImageUrl] = useState<File | null | string>(null);
   const [albumId, setAlbumId] = useState('');
   const [demo ,  setDemo] = useState('');
   const theme = useTheme();
@@ -26,7 +26,7 @@ const AddSongsModal: React.FC<AddSongsModalProps> = ({ open, onClose, onAddSong 
   const {albums} = useMusicStore()
 
   const handleAddSong = () => {
-    onAddSong({ title, artist, duration: +duration, audioUrl, imageUrl, albumId });
+    onAddSong({ title, artist, duration: +duration, audioUrl : audioUrl as string, imageUrl : imageUrl as string, albumId });
     onClose();
     setTitle('');
     setArtist('');

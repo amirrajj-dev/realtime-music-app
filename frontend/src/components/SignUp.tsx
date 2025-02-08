@@ -11,7 +11,7 @@ const SignUp = () => {
   const { theme } = useThemeStore();
   const { signup, isLoading, error } = useAuthStore();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<IUser>({
+  const [formData, setFormData] = useState<Omit<IUser , '_id'>>({
     fullname: "",
     email: "",
     password: ""
@@ -41,7 +41,7 @@ const SignUp = () => {
       toast.error('Password must be at least 6 characters long', toastOptions as ToastOptions);
       return;
     }
-    const res = await signup(formData);
+    const res = await signup(formData as IUser);
     if (res.success) {
       toast.success('Signed up successfully!', toastOptions as ToastOptions);
       setTimeout(() => {

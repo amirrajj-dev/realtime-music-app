@@ -118,6 +118,7 @@ const PlaybackControl: React.FC = () => {
   };
 
   const handleSliderChange = (event: any, value: number | number[]) => {
+    console.log(event);
     const audio = audioRef.current;
     if (audio) {
       audio.currentTime = value as number;
@@ -126,6 +127,7 @@ const PlaybackControl: React.FC = () => {
   };
 
   const handleVolumeChange = (event: any, value: number | number[]) => {
+    console.log(event);
     setVolume(value as number);
   };
 

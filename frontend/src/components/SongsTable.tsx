@@ -60,7 +60,7 @@ const SongsTable: React.FC<SongsTableProps> = ({ addSong, deleteSong, songs , is
                     <Typography variant="body1">{song.title}</Typography>
                   </TableCell>
                   <TableCell><Typography variant="body1">{song.artist}</Typography></TableCell>
-                  <TableCell><Typography variant="body1">{new Date(song.createdAt).toLocaleDateString()}</Typography></TableCell>
+                  <TableCell><Typography variant="body1">{new Date(String(song.createdAt)).toLocaleDateString()}</Typography></TableCell>
                   <TableCell>
                     <IconButton onClick={() => deleteSong(song._id)} sx={{ color: theme.palette.error.main }}>
                       <DeleteIcon />
