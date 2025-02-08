@@ -3,10 +3,12 @@ import { useChatStore } from '../../store/useChat';
 import { useAuthStore } from '../../store/useAuth';
 import Sidebar from './components/SideBar';
 import ChatPlace from './components/ChatPlace';
-import { Box } from '@mui/material';
+import { Box, Paper, useMediaQuery, useTheme } from '@mui/material';
 import { IUser } from '../../interfaces/interface';
 
 const ChatPage = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { user } = useAuthStore();
   const { getUsers, users, messages, selectedUser, fetchMessages, setSelectedUser, isLoading } = useChatStore();
 
@@ -23,10 +25,28 @@ const ChatPage = () => {
   }, [fetchMessages, selectedUser]);
 
   return (
-    <Box sx={{ display: 'flex', height: '89vh' }}>
-      <Sidebar users={users} selectUser={(user) => setSelectedUser(user)} loading={isLoading} />
-      <ChatPlace messages={messages} selectedUser={selectedUser as IUser} loading={isLoading} />
-    </Box>
+    <Paper
+      elevation={4}
+      sx={{
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        height: '89vh',
+        borderRadius: '16px',
+        overflow: 'hidden',
+      }}
+    >
+      <Sidebar
+        users={users}
+        selectUser={(user) => setSelectedUser(user)}
+        loading={isLoading}
+        isMobile={isMobile}
+      />
+      <ChatPlace
+        messages={messages}
+        selectedUser={selectedUser as IUser}
+        isMobile={isMobile}
+      />
+    </Paper>
   );
 };
 

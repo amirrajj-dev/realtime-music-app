@@ -7,11 +7,11 @@ interface SidebarProps {
   users: IUser[];
   selectUser: (user: IUser) => void;
   loading: boolean;
+  isMobile: boolean;
 }
 
-const Sidebar = ({ users, selectUser, loading }: SidebarProps) => {
+const Sidebar = ({ users, selectUser, loading, isMobile }: SidebarProps) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { onlineUsers } = useChatStore();
 
   const handleSelectUser = useCallback((user: IUser) => {
@@ -28,7 +28,7 @@ const Sidebar = ({ users, selectUser, loading }: SidebarProps) => {
         backgroundColor: theme.palette.background.paper,
         borderRadius: '8px',
         boxShadow: 3,
-        width: '13%',
+        width: isMobile ? '100%' : '20%',
       }}
     >
       <List>
