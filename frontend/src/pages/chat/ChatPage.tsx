@@ -8,7 +8,7 @@ import { IUser } from '../../interfaces/interface';
 
 const ChatPage = () => {
   const { user } = useAuthStore();
-  const { getUsers, users, messages, selectedUser, fetchMessages , setSelectedUser } = useChatStore();
+  const { getUsers, users, messages, selectedUser, fetchMessages , setSelectedUser , isLoading } = useChatStore();
 
   useEffect(() => {
     if (user) {
@@ -24,7 +24,7 @@ const ChatPage = () => {
 
   return (
     <Box sx={{ display: 'flex' , height : '89vh' }}>
-      <Sidebar users={users} selectUser={(user)=>setSelectedUser(user)} />
+      <Sidebar users={users} selectUser={(user)=>setSelectedUser(user)} loading={isLoading} />
       <ChatPlace messages={messages} selectedUser={selectedUser as IUser} />
     </Box>
   );
