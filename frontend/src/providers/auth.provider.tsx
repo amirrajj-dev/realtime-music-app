@@ -1,7 +1,7 @@
-import React, { createContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { axiosInstance } from "../configs/axios";
 import SyncIcon from '@mui/icons-material/Sync';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { useChatStore } from "../store/useChat";
 import { useAuthStore } from "../store/useAuth";
 
@@ -13,45 +13,48 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate()
-  const {initSocket , disconnectSocket} = useChatStore()
-  const {user} = useAuthStore()
+  const navigate = useNavigate();
+
+  const initSocket = useChatStore((state) => state.initSocket);
+  const disconnectSocket = useChatStore((state) => state.disconnectSocket);
+  
+
+  const user = useAuthStore((state) => state.user);
+
+  const getToken = useCallback(async () => {
+    if (!user || !user.id) return;
+
+    try {
+      setLoading(true);
+      const res = await axiosInstance.get("/auth/get-token", { withCredentials: true });
+
+      if (res.data.token) {
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+        initSocket(String(user.id)); 
+      } else {
+        navigate('/signin', { replace: true });
+      }
+    } catch (error) {
+      console.error("Error fetching token:", error);
+      axiosInstance.defaults.headers.common["Authorization"] = "";
+      navigate('/signin', { replace: true });
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id, initSocket, navigate]);
 
   useEffect(() => {
-    const getToken = async () => {
-      try {
-        setLoading(true);
-        const res = await axiosInstance.get("/auth/get-token" , {
-          withCredentials: true
-        });
-        if (res.data.token) {
-          axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
-          const userId = String(user.id)
-          if (userId){
-            initSocket(userId)
-          }
-        } else {
-          navigate('/signin', { replace: true }); // Redirect to signin page on token not found
-        }
-      } catch (error) {
-        console.error("Error fetching token:", error);
-        axiosInstance.defaults.headers.common["Authorization"] = "";
-        navigate('/signin', { replace: true }); 
-      } finally {
-        setLoading(false);
-      }
-    };
-    getToken();
+    getToken(); 
 
-    return ()=>disconnectSocket()
-  }, [disconnectSocket , initSocket , user , navigate]);
+    return () => disconnectSocket();
+  }, [getToken, disconnectSocket]);
 
-  if (loading){
+  if (loading) {
     return (
-        <div className="flex items-center justify-center h-screen bg-black/90 text-emerald-600">
-            <SyncIcon fontSize="large" className="animate-spin" />
-        </div>
-    )
+      <div className="flex items-center justify-center h-screen bg-black/90 text-emerald-600">
+        <SyncIcon fontSize="large" className="animate-spin" />
+      </div>
+    );
   }
 
   return (
