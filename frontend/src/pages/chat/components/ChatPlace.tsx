@@ -6,9 +6,10 @@ import {
   Avatar,
   TextField,
   IconButton,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import OnlineIcon from "@mui/icons-material/FiberManualRecord"; // Add this import for the online icon
 import { IMessage, IUser } from "../../../interfaces/interface";
 import { useAuthStore } from "../../../store/useAuth";
 import { useChatStore } from "../../../store/useChat";
@@ -22,7 +23,7 @@ interface ChatPlaceProps {
 const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
   const theme = useTheme();
   const { user, getCurrentUser } = useAuthStore();
-  const { sendMessage, fetchMessages } = useChatStore();
+  const { sendMessage, fetchMessages, onlineUsers } = useChatStore();
   const [messageContent, setMessageContent] = useState<string>("");
 
   useEffect(() => {
@@ -56,24 +57,38 @@ const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
           <Box
             sx={{
               display: "flex",
-              alignItems: "center",
-              gap: 2,
+              position : 'relative',
               padding: 2,
               borderBottom: `1px solid ${theme.palette.divider}`,
               backgroundColor: theme.palette.background.paper,
             }}
           >
-            <Avatar sx={{ backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}>
-              {selectedUser.fullname.charAt(0)}
-            </Avatar>
-            <Typography variant="h6" color={theme.palette.text.primary}>
-              {selectedUser.fullname}
-            </Typography>
+            <Box sx={{ display: "flex", gap: '8px', alignItems: 'center' }}>
+              <Avatar
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.primary.contrastText,
+                }}
+              >
+                {selectedUser.fullname.charAt(0)}
+              </Avatar>
+              <Typography variant="h6" color={theme.palette.text.primary}>
+                {selectedUser.fullname}
+              </Typography>
+            </Box>
+            {onlineUsers.has(String(selectedUser._id)) && (
+              <Box sx={{ display: "flex", alignItems: 'center', gap: '4px' , position : 'absolute' , bottom : '0px' , left : '55px' }}>
+                <OnlineIcon sx={{ color: theme.palette.success.main, fontSize: '12px' }} /> {/* Online icon */}
+                <Typography variant="caption" color={theme.palette.text.secondary}>
+                  Online
+                </Typography>
+              </Box>
+            )}
           </Box>
 
           {/* Messages Section */}
           <Box
-          className="scrollbar-thin"
+            className="scrollbar-thin"
             sx={{
               flexGrow: 1,
               overflowY: "auto",
@@ -104,7 +119,9 @@ const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
                       margin: isCurrentUser ? "0 0 0 8px" : "0 8px 0 0",
                     }}
                   >
-                    {isCurrentUser ? user?.fullname.charAt(0) : selectedUser?.fullname.charAt(0)}
+                    {isCurrentUser
+                      ? user?.fullname.charAt(0)
+                      : selectedUser?.fullname.charAt(0)}
                   </Avatar>
 
                   {/* Message Bubble */}
@@ -122,9 +139,16 @@ const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
                     <Typography
                       variant="caption"
                       color={theme.palette.text.secondary}
-                      sx={{ display: "block", marginTop: 0.5, textAlign: "right" }}
+                      sx={{
+                        display: "block",
+                        marginTop: 0.5,
+                        textAlign: "right",
+                      }}
                     >
-                      {new Date(String(message.createdAt)).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(String(message.createdAt)).toLocaleTimeString(
+                        [],
+                        { hour: "2-digit", minute: "2-digit" }
+                      )}
                     </Typography>
                   </Paper>
                 </Box>
@@ -151,10 +175,14 @@ const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
               sx={{
                 backgroundColor: theme.palette.background.default,
                 borderRadius: 2,
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: theme.palette.divider },
-                  '&:hover fieldset': { borderColor: theme.palette.primary.main },
-                  '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": { borderColor: theme.palette.divider },
+                  "&:hover fieldset": {
+                    borderColor: theme.palette.primary.main,
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: theme.palette.primary.main,
+                  },
                 },
               }}
             />
@@ -165,7 +193,7 @@ const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
                 marginLeft: 1,
                 backgroundColor: theme.palette.primary.main,
                 color: theme.palette.primary.contrastText,
-                '&:hover': { backgroundColor: theme.palette.primary.dark },
+                "&:hover": { backgroundColor: theme.palette.primary.dark },
               }}
             >
               <SendIcon />
@@ -173,7 +201,14 @@ const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
           </Box>
         </>
       ) : (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
           <Typography variant="h6" color="textSecondary" align="center">
             Please select a user to start chatting.
           </Typography>
