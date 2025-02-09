@@ -43,9 +43,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       const res = await axiosInstance.get("/users", { withCredentials: true });
       if (!res.data.success) throw new Error("Failed To Fetch Users");
 
-      set({ users: res.data.data, error: null, isLoading: false }); // Make sure to set isLoading to false here
+      set({ users: res.data.data, error: null, isLoading: false }); 
     } catch (error: any) {
-      set({ error: error.message, isLoading: false }); // Make sure to set isLoading to false here
+      set({ error: error.message, isLoading: false }); 
     }
   },
 
@@ -53,23 +53,23 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   initSocket: (userId: string) => {
     if (get().isConnected) return;
-
+  
     const socket = io(baseURL, { autoConnect: false, withCredentials: true });
-
+  
     socket.auth = { userId } as { userId: string };
-
+  
     socket.connect();
     socket.emit("user_connected", userId);
-
+  
     socket.on("online_users", (users: string[]) => {
       set(() => ({ onlineUsers: new Set(users) }));
     });
-
+  
     socket.on("activities", (activities: [string, string][]) => {
       console.log(activities);
       set({ userActivities: new Map(activities) });
-   });   
-
+    });
+  
     socket.on("user_connected", (newUserId: string) => {
       set((state) => {
         const updatedUsers = new Set(state.onlineUsers);
@@ -77,7 +77,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         return { onlineUsers: updatedUsers };
       });
     });
-
+  
     socket.on("user_disconnected", (disconnectedUserId: string) => {
       set((state) => {
         const updatedUsers = new Set(state.onlineUsers);
@@ -85,7 +85,13 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         return { onlineUsers: updatedUsers };
       });
     });
-
+  
+    socket.on("new_message", (newMessage: IMessage) => {
+      set((state) => ({
+        messages: [...state.messages, newMessage],
+      }));
+    });
+  
     socket.on("activities_updated", ({ userId, activity }) => {
       console.log(activity);
       set((state) => {
@@ -93,10 +99,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         updatedActivities.set(userId, activity);
         return { userActivities: updatedActivities };
       });
-    });       
-
+    });
+  
     set({ socket, isConnected: true });
-  },
+  },  
 
   disconnectSocket: () => {
     const socket = get().socket;
@@ -118,6 +124,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       const res = await axiosInstance.get(`/users/messages/${userId}`, {
         withCredentials: true,
       });
+      console.log('get messges =>' , res);
       if (!res.data.success) throw new Error("Failed To Fetch Messages");
       set(() => ({
         messages: res.data.data,
