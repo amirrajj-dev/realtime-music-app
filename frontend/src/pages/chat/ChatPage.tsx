@@ -9,15 +9,7 @@ import { IUser } from '../../interfaces/interface';
 const ChatPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { user } = useAuthStore();
-  const { getUsers, users, messages, selectedUser, fetchMessages, setSelectedUser, isLoading } = useChatStore();
-
-  useEffect(() => {
-    if (user) {
-      getUsers();
-    }
-  }, [getUsers, user]);
-
+  const {users, messages, selectedUser, fetchMessages, setSelectedUser, isLoading } = useChatStore();
   useEffect(() => {
     if (selectedUser) {
       fetchMessages(String(selectedUser._id));
