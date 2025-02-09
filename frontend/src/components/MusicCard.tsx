@@ -42,7 +42,6 @@ const MusicCard: React.FC<ISong> = ({
     if (songs.length === 0) {
       setSongs(featuredSongs);
     }
-
     if (currentSong?._id === _id) {
       togglePlay();
     } else {
@@ -57,9 +56,9 @@ const MusicCard: React.FC<ISong> = ({
         createdAt,
         updatedAt,
       });
-      setSongs(featuredSongs);
     }
   };
+  
 
   return (
     <Card className="relative group w-full sm:max-w-sm rounded-lg overflow-hidden shadow-lg transform transition duration-300 hover:scale-105">
