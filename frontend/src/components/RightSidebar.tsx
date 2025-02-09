@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Box, Avatar, Typography, useTheme } from "@mui/material";
+import { Box, Avatar, Typography, useTheme, useMediaQuery } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -12,6 +12,7 @@ const RightSidebar = () => {
   const { users, getUsers, isLoading, onlineUsers, userActivities } = useChatStore();
   const { user } = useAuthStore();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Adjust this breakpoint as needed
 
   console.log(userActivities);
 
@@ -51,6 +52,10 @@ const RightSidebar = () => {
         </Typography>
       </Box>
     );
+  }
+  
+  if (isMobile) {
+    return null;
   }
 
   return (
@@ -103,7 +108,6 @@ const RightSidebar = () => {
                   >
                     {user.fullname}
                   </Typography>
-                  {/* Display the online indicator */}
                   {isOnline && (
                     <FiberManualRecordIcon
                       sx={{ color: theme.palette.success.main, fontSize: "12px" }}
