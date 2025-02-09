@@ -26,7 +26,7 @@ const AlbumsTable: React.FC<AlbumsTableProps> = ({ addAlbum, albums, deleteAlbum
       >
         Add Album
       </Button>
-      <TableContainer component={Paper} sx={{ maxHeight: 450, overflowY: 'auto' }}>
+      <TableContainer className="scrollbar-thin" component={Paper} sx={{ maxHeight: 450, overflowY: 'auto' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>

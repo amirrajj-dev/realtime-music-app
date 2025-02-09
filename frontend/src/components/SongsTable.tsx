@@ -27,7 +27,7 @@ const SongsTable: React.FC<SongsTableProps> = ({ addSong, deleteSong, songs , is
       >
         Add Song
       </Button>
-      <TableContainer component={Paper} sx={{ maxHeight: 450, overflowY: 'auto' }}>
+      <TableContainer className="scrollbar-thin" component={Paper} sx={{ maxHeight: 450, overflowY: 'auto' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>

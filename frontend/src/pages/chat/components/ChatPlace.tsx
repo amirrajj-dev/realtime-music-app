@@ -6,9 +6,7 @@ import {
   Avatar,
   TextField,
   IconButton,
-  useTheme,
-  CircularProgress,
-  useMediaQuery,
+  useTheme
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { IMessage, IUser } from "../../../interfaces/interface";
@@ -33,7 +31,7 @@ const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
 
   const handleSendMessage = useCallback(() => {
     if (messageContent.trim().length) {
-      sendMessage(user!.id, selectedUser._id, messageContent);
+      sendMessage(user!.id as string, selectedUser._id, messageContent);
       setMessageContent("");
       fetchMessages(String(selectedUser._id));
     }
@@ -75,6 +73,7 @@ const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
 
           {/* Messages Section */}
           <Box
+          className="scrollbar-thin"
             sx={{
               flexGrow: 1,
               overflowY: "auto",
@@ -125,7 +124,7 @@ const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
                       color={theme.palette.text.secondary}
                       sx={{ display: "block", marginTop: 0.5, textAlign: "right" }}
                     >
-                      {new Date(message.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(String(message.createdAt)).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </Typography>
                   </Paper>
                 </Box>
