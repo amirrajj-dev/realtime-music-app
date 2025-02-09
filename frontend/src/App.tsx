@@ -13,6 +13,7 @@ import MainLayout from "./components/MainLayout";
 import MainAlbum from "./pages/albums/mainalbum/MainAlbum";
 import AdminPage from "./pages/Admin/AdminPage";
 import ChatPage from "./pages/chat/ChatPage";
+import NotFound from "./components/NotFound";
 
 const App: React.FC = () => {
   const theme = useThemeStore((state) => state.theme);
@@ -43,6 +44,7 @@ const App: React.FC = () => {
           <Route path="/albums/:id" element={<MainAlbum/>} />
           <Route path="/chat" element={<ChatPage/>} />
           </Route>
+          <Route path="*" element={<NotFound/>} />
         </Routes>
         <ToastContainer/>
       </AuthContextProvider>
