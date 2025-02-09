@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { ISong } from '../interfaces/interface';
+import { useChatStore } from './useChat';
 
 interface PlayerStore {
   currentSong: ISong | null;
@@ -50,6 +51,13 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   },
   setCurrentSong: (song) => {
     if (!song) return;
+    const socket = useChatStore.getState().socket
+    if (socket?.auth && "userId" in socket.auth){
+      socket.emit('update_activity', {
+        userId: socket.auth.userId,
+        activity: `${song.title} - ${song.artist}`
+      })
+    }
     const { currentSong, isPlaying } = get();
     if (currentSong?._id === song._id) {
       set({ isPlaying: !isPlaying });
@@ -63,6 +71,15 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     }
   },
   togglePlay: () => {
+    const isPlaying = !get().isPlaying
+    const socket = useChatStore.getState().socket
+    const currentSong = get().currentSong
+    if (socket?.auth && "userId" in socket.auth){
+      socket.emit('update_activity', {
+        userId: socket.auth.userId,
+        activity: `${isPlaying && currentSong ? `${currentSong.title} - ${currentSong.artist}` : 'paused the song'}`
+      })
+    }
     set((state) => ({ isPlaying: !state.isPlaying }));
   },
   playSong: (song) => {
@@ -89,6 +106,14 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
           // Repeat from the beginning
           nextIndex = 0;
         } else if (repeatMode === 'off') {
+          const socket = useChatStore.getState().socket
+          const nextSong = get().songs[nextIndex];
+          if (socket?.auth && "userId" in socket.auth){
+            socket.emit('update_activity', {
+              userId: socket.auth.userId,
+              activity: `${nextSong.title} - ${nextSong.artist}`
+            })
+          }
           // Stop playback
           set({ isPlaying: false });
           return;
@@ -110,6 +135,13 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     if (!playlist.length) return;
     const prevIndex = (currentIndex - 1 + playlist.length) % playlist.length;
     const prevSong = playlist[prevIndex];
+    const socket = useChatStore.getState().socket
+    if (socket?.auth && "userId" in socket.auth){
+      socket.emit('update_activity', {
+        userId: socket.auth.userId,
+        activity: `${prevSong.title} - ${prevSong.artist}`
+      })
+    }
     set({
       currentIndex: prevIndex,
       currentSong: prevSong,
@@ -118,9 +150,17 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   },
   playAlbum: (songs: ISong[], startIndex = 0) => {
     if (!songs.length) return;
+    const song = songs[startIndex];
+    const socket = useChatStore.getState().socket
+    if (socket?.auth && "userId" in socket.auth){
+      socket.emit('update_activity', {
+        userId: socket.auth.userId,
+        activity: `${song.title} - ${song.artist}`
+      })
+    }
     set({
       songs,
-      currentSong: songs[startIndex],
+      currentSong: song,
       currentIndex: startIndex,
       isPlaying: true,
     });

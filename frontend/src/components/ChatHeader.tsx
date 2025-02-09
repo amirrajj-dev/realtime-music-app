@@ -27,13 +27,13 @@ const ChatHeader = ({ selectedUser, onlineUsers }: ChatHeaderProps) => {
             color: theme.palette.primary.contrastText,
           }}
         >
-          {selectedUser.fullname.charAt(0)}
+          {selectedUser?.fullname.charAt(0)}
         </Avatar>
         <Typography variant="h6" color={theme.palette.text.primary}>
-          {selectedUser.fullname}
+          {selectedUser?.fullname}
         </Typography>
       </Box>
-      {onlineUsers.has(String(selectedUser._id)) && (
+      {onlineUsers.has(String(selectedUser?._id)) && (
         <Box
           sx={{
             display: "flex",

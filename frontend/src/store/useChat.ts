@@ -55,9 +55,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     if (get().isConnected) return;
 
     const socket = io(baseURL, { autoConnect: false, withCredentials: true });
-    socket.auth = { userId };
-    socket.connect();
 
+    socket.auth = { userId } as { userId: string };
+
+    socket.connect();
     socket.emit("user_connected", userId);
 
     socket.on("online_users", (users: string[]) => {
@@ -65,8 +66,11 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     });
 
     socket.on("activities", (activities: [string, string][]) => {
-      set(() => ({ userActivities: new Map(activities) }));
-    });
+      if (!Array.isArray(activities)) return; // Ensure it's an array
+      set(() => ({
+        userActivities: new Map(activities.map(([userId, activity]) => [String(userId), String(activity)])),
+      }));
+    });    
 
     socket.on("user_connected", (newUserId: string) => {
       set((state) => {
@@ -82,18 +86,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         updatedUsers.delete(disconnectedUserId);
         return { onlineUsers: updatedUsers };
       });
-    });
-
-    socket.on("new_message", (message: IMessage) => {
-      set((state) => ({
-        messages: [...state.messages, message],
-      }));
-    });
-
-    socket.on("message_sent", (message: IMessage) => {
-      set((state) => ({
-        messages: [...state.messages, message],
-      }));
     });
 
     socket.on("activity_updated", ({ userId, activity }) => {
@@ -123,7 +115,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   fetchMessages: async (userId: string) => {
     try {
-      console.log('yessssssss');
       set({ isLoading: true });
       const res = await axiosInstance.get(`/users/messages/${userId}`, {
         withCredentials: true,
