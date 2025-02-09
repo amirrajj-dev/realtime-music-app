@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { ISong } from '../interfaces/interface';
 import { useChatStore } from './useChat';
-import { useAuthStore } from './useAuth';
 
 interface PlayerStore {
   currentSong: ISong | null;

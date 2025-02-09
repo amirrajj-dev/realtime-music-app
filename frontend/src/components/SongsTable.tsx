@@ -7,13 +7,13 @@ import AddSongsModal from "./AddSongModal";
 
 interface SongsTableProps {
     songs: ISong[],
-    addSong: (song : ISong) => void,
+    addSong: (song : Partial<ISong>) => void,
     deleteSong: (id: string) => void
     isLoading : boolean,
     albums : IAlbum[]
 }
 
-const SongsTable: React.FC<SongsTableProps> = ({ addSong, deleteSong, songs , isLoading , albums }) => {
+const SongsTable: React.FC<SongsTableProps> = ({ addSong, deleteSong, songs , isLoading }) => {
   const theme = useTheme();
   const [isOpen , setIsOpen] = useState(false)
   
@@ -72,7 +72,7 @@ const SongsTable: React.FC<SongsTableProps> = ({ addSong, deleteSong, songs , is
           </TableBody>
         </Table>
       </TableContainer>
-      <AddSongsModal open={isOpen} albums={albums} onClose={()=>setIsOpen(false)} onAddSong={addSong} />
+      <AddSongsModal open={isOpen} onClose={()=>setIsOpen(false)} onAddSong={addSong} />
     </Box>
   );
 };

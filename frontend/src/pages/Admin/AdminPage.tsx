@@ -41,7 +41,7 @@ const AdminPage = () => {
     className: theme.palette.mode === "dark" ? "dark" : "light",
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
 
@@ -75,14 +75,8 @@ const AdminPage = () => {
     }
   };
 
-  const handleAddSong = async (song: ISong) => {
-    if (
-      !song.title ||
-      !song.artist ||
-      !song.imageUrl ||
-      !song.duration ||
-      !song.audioUrl
-    ) {
+  const handleAddSong = async (song: Partial<ISong>) => {
+    if (!song.title || !song.artist || !song.imageUrl || !song.duration || !song.audioUrl) {
       toast.error("All fields are required", toastOptions as ToastOptions);
       return;
     }
@@ -95,33 +89,30 @@ const AdminPage = () => {
     if (song.albumId) {
       formdata.append("albumId", song.albumId);
     }
-    const res = await axiosInstance.post("/admin/add-song", formdata, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      timeout: 60000, // 1 min
-    });
-    if (res.data.success) {
-      toast.success(res.data.message, toastOptions as ToastOptions);
-      getAlbums();
-      getSongs();
-      getStats();
-    } else {
-      toast.error(
-        res.response.data.error.message || res.data.error.message,
-        toastOptions as ToastOptions
-      );
+    try {
+      const res = await axiosInstance.post("/admin/add-song", formdata, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        timeout: 60000, // 1 min
+      });
+      if (res.data.success) {
+        toast.success(res.data.message, toastOptions as ToastOptions);
+        getAlbums();
+        getSongs();
+        getStats();
+      } else {
+        toast.error(res.data.message, toastOptions as ToastOptions);
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || error.message;
+      toast.error(errorMessage, toastOptions as ToastOptions);
     }
   };
-
+  
   const handleAddAlbum = async (album: Partial<IAlbum>) => {
-    if (
-      !album.title ||
-      !album.artist ||
-      !album.imageUrl ||
-      !album.releaseYear
-    ) {
+    if (!album.title || !album.artist || !album.imageUrl || !album.releaseYear) {
       toast.error("All fields are required", toastOptions as ToastOptions);
       return;
     }
@@ -130,24 +121,27 @@ const AdminPage = () => {
     formdata.append("artist", album.artist);
     formdata.append("imageFile", album.imageUrl);
     formdata.append("releaseDate", album.releaseYear.toString());
-    const res = await axiosInstance.post("/admin/add-album", formdata, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      timeout: 60000, // 1 min
-    });
-    if (res.data.success) {
-      toast.success(res.data.message, toastOptions as ToastOptions);
-      getAlbums();
-      getStats();
-    } else {
-      toast.error(
-        res.response.data.error.message || res.data.error.message,
-        toastOptions as ToastOptions
-      );
+    try {
+      const res = await axiosInstance.post("/admin/add-album", formdata, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        timeout: 60000, // 1 min
+      });
+      if (res.data.success) {
+        toast.success(res.data.message, toastOptions as ToastOptions);
+        getAlbums();
+        getStats();
+      } else {
+        toast.error(res.data.message, toastOptions as ToastOptions);
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || error.message;
+      toast.error(errorMessage, toastOptions as ToastOptions);
     }
   };
+  
 
   return (
     <Box

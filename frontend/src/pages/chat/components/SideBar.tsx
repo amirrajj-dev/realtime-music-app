@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { Box, List, ListItem, Avatar, Divider, Tooltip, Skeleton, Badge, useTheme, useMediaQuery } from '@mui/material';
+import { Box, List, ListItem, Avatar, Divider, Tooltip, Skeleton, Badge, useTheme} from '@mui/material';
 import { IUser } from '../../../interfaces/interface';
 import { useChatStore } from '../../../store/useChat';
 

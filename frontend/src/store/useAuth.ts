@@ -4,7 +4,7 @@ import { axiosInstance } from '../configs/axios';
 
 interface AuthStore {
   user: IUser | null;
-  signin: (user: Pick<IUser, 'email' | 'password'>) => Promise<void | {success : boolean}>;
+  signin: (user: Pick<IUser, 'email' | 'password'>) => Promise<void | {success : boolean , error? : string | null}>;
   logout: () => Promise<void | {success : boolean}>;
   signup: (user: IUser) => Promise<{success : boolean , message? : string}>;
   isAuthenticated: () => boolean;

@@ -1,5 +1,6 @@
 export interface IUser {
-    _id? : string
+    _id : string;
+    id?: string
     fullname: string;
     email: string;
     password: string;
@@ -34,7 +35,7 @@ export interface IMessage {
     _id: string;
     senderId: string;
     receiverId: string;
-    content: string;
+    message: string;
     createdAt?: Date;
     updatedAt?: Date;
 }

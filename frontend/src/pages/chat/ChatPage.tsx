@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 import { useChatStore } from '../../store/useChat';
-import { useAuthStore } from '../../store/useAuth';
 import Sidebar from './components/SideBar';
 import ChatPlace from './components/ChatPlace';
-import { Box, Paper, useMediaQuery, useTheme } from '@mui/material';
+import {Paper, useMediaQuery, useTheme } from '@mui/material';
 import { IUser } from '../../interfaces/interface';
 
 const ChatPage = () => {
