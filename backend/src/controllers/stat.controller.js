@@ -9,28 +9,30 @@ export const getAllStats = async (req, res) => {
       songssModel.countDocuments({}),
       usersModel.countDocuments({}),
     ]);
-    //get all artists from songs model by aggregate
-    const artistsCount = await songssModel.aggregate([
+
+    const artistsCountAggregation = await songssModel.aggregate([
       {
-        $unionWith: {
-          coll: "albums",
-          pipeline: [],
+        $group: {
+          _id: "$artist",
         },
       },
-      { $group: { _id: "$artist", count: { $sum: 1 } } },
+      {
+        $count: "uniqueArtists"
+      }
     ]);
+
+    const artistsCount = artistsCountAggregation[0] ? artistsCountAggregation[0].uniqueArtists : 0;
+
     res.status(200).json({
       data: {
         albumsCount,
         songsCount,
         usersCount,
-        artistsCount: artistsCount[0].count || 0,
+        artistsCount,
       },
       success: true,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error", success: false, error });
+    return res.status(500).json({ message: "Internal Server Error", success: false, error });
   }
 };
