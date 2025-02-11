@@ -23,7 +23,7 @@ const ChatPage = () => {
         flexDirection: isMobile ? 'column' : 'row',
         height: '89vh',
         borderRadius: '16px',
-        overflow: 'hidden',
+        overflow: isMobile ? 'auto' : 'hidden',
       }}
     >
       <Sidebar

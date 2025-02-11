@@ -58,7 +58,6 @@ const MusicCard: React.FC<ISong> = ({
       });
     }
   };
-  
 
   return (
     <Card className="relative group w-full sm:max-w-sm rounded-lg overflow-hidden shadow-lg transform transition duration-300 hover:scale-105">
@@ -72,9 +71,12 @@ const MusicCard: React.FC<ISong> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-80 transition-opacity duration-500"></div>
         <IconButton
           onClick={handlePlayPause}
-          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${
-            currentSong?._id === _id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-          }`}
+          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 
+    ${
+      currentSong?._id === _id
+        ? "opacity-100"
+        : "opacity-0 group-hover:opacity-100 sm:group-hover:opacity-100 sm:opacity-0 opacity-100"
+    }`}
           aria-label={`Play ${title} by ${artist}`}
           sx={{
             color: isDarkMode ? "#fff" : "#fff",

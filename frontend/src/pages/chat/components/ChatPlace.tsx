@@ -13,7 +13,7 @@ interface ChatPlaceProps {
   isMobile: boolean;
 }
 
-const ChatPlace = ({ messages, selectedUser }: ChatPlaceProps) => {
+const ChatPlace = ({ messages, selectedUser, isMobile }: ChatPlaceProps) => {
   const { user, getCurrentUser } = useAuthStore();
   const { sendMessage, fetchMessages, onlineUsers, isLoading } = useChatStore();
 
@@ -30,10 +30,19 @@ const ChatPlace = ({ messages, selectedUser }: ChatPlaceProps) => {
   );
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" , width : '87%' }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        width: isMobile ? "100%" : "87%",
+      }}
+    >
       <ChatHeader selectedUser={selectedUser} onlineUsers={onlineUsers} />
       <MessageSection messages={messages} user={user} selectedUser={selectedUser} isLoading={isLoading} />
-      <MessageInputField onSendMessage={handleSendMessage} />
+      <Box sx={{ mt: "auto" }}>
+        <MessageInputField onSendMessage={handleSendMessage} />
+      </Box>
     </Box>
   );
 };
