@@ -4,10 +4,11 @@ import { messagesModel } from "../models/message.model.js";
 export const initializeSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:4000",
-      credentials: true,
+      origin: process.env.FRONTEND_URL || "http://localhost:4000",
+      credentials: true
     },
-  });
+    transports: ["websocket", "polling"]
+  });  
 
   const userSockets = new Map();
   const userActivities = new Map(); 

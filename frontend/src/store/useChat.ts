@@ -22,7 +22,9 @@ interface ChatStore {
   fetchMessages: (userId: string) => Promise<void>;
 }
 
-const baseURL = import.meta.env.MODE === "production" ? "/api" : "http://localhost:5000/api";
+const baseURL = import.meta.env.MODE === "production" 
+  ? "https://realtime-music-app.onrender.com"
+  : "http://localhost:5000";
 
 export const useChatStore = create<ChatStore>((set, get) => ({
   users: [],
@@ -54,7 +56,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   initSocket: (userId: string) => {
     if (get().isConnected) return;
   
-    const socket = io(baseURL, { autoConnect: false, withCredentials: true , transports : ["websocket"] });
+    const socket = io(baseURL, { autoConnect: false, withCredentials: true });
   
     socket.auth = { userId } as { userId: string };
   

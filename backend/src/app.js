@@ -26,9 +26,9 @@ const httpServer = createServer(app)
 initializeSocket(httpServer)
 
 app.use(cors({
-    origin: '*', // allow http requests from anywhere
-    credentials: true
-}))
+    origin: process.env.FRONTEND_URL || 'http://localhost:4000',
+    credentials: true,
+}));
 
 const dirname = path.resolve()
 app.use(fileUpload({
