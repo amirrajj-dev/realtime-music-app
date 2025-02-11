@@ -13,6 +13,8 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { createServer } from 'http'
 import { initializeSocket } from './utils/socket.js'
+import cron from 'node-cron'
+import fs from "fs"
 
 dotenv.config()
 const app = express()
@@ -24,7 +26,7 @@ const httpServer = createServer(app)
 initializeSocket(httpServer)
 
 app.use(cors({
-    origin: 'http://localhost:4000',
+    origin: '*', // allow http requests from anywhere
     credentials: true
 }))
 
@@ -38,12 +40,36 @@ app.use(fileUpload({
     preserveExtension: true,  // keep original file extension.
 }))
 
+const tmpDir = path.join(process.cwd(), 'tmp')
+//every one hour deletes the tmp folder thass why we use node-cron its a cron job
+cron.schedule("0 * * * *" , ()=>{
+    fs.readdir(tmpDir, (err, files) => {
+        if (err) {
+            throw err;
+        }
+        files.forEach(file => {
+            fs.unlink(path.join(tmpDir, file), err => {
+                if (err) {
+                    throw err;
+                }
+            });
+        });
+    });
+})
+
 app.use('/api/users' , userRoutes)
 app.use('/api/auth' , authRoutes)
 app.use('/api/admin' , adminRoutes)
 app.use('/api/songs' , songRoutes)
 app.use('/api/albums' , albumRoutes)
 app.use('/api/stats' , statRoutes)
+
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(dirname , '../frontend/dist')))
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(dirname, '../frontend/dist/index.html'))
+    })
+}
 
 httpServer.listen(port , async ()=>{
     await connectToDb()

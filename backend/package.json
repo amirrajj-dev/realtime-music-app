@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/app.js",
-    "seed:songs" : "node src/seeds/songs.js",
-    "seed:albums" : "node src/seeds/albums.js"
+    "start": "node src/app.js",
+    "seed:songs": "node src/seeds/songs.js",
+    "seed:albums": "node src/seeds/albums.js"
   },
   "keywords": [],
   "author": "amir",
@@ -22,6 +23,8 @@
     "express-fileupload": "^1.5.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
+    "music-app": "file:..",
+    "node-cron": "^3.0.3",
     "socket.io": "^4.8.1"
   }
 }

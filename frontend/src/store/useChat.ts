@@ -22,7 +22,7 @@ interface ChatStore {
   fetchMessages: (userId: string) => Promise<void>;
 }
 
-const baseURL = "http://localhost:5000";
+const baseURL = import.meta.env.MODE === "production" ? "/api" : "http://localhost:5000/api";
 
 export const useChatStore = create<ChatStore>((set, get) => ({
   users: [],
@@ -54,7 +54,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   initSocket: (userId: string) => {
     if (get().isConnected) return;
   
-    const socket = io(baseURL, { autoConnect: false, withCredentials: true });
+    const socket = io(baseURL, { autoConnect: false, withCredentials: true , transports : ["websocket"] });
   
     socket.auth = { userId } as { userId: string };
   
