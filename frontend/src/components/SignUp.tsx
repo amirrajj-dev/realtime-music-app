@@ -86,8 +86,8 @@ const SignUp = () => {
           <img
             src={`${
               theme.palette.mode === "dark"
-                ? "public/app-logo/dark-logo.svg"
-                : "public/app-logo/light-logo.svg"
+                ? "/app-logo/dark-logo.svg"
+                : "/app-logo/light-logo.svg"
             }`}
             className="fill-amber-400"
             alt="App Logo"

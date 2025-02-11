@@ -75,8 +75,8 @@ const SignIn = () => {
           <img
             src={`${
               theme.palette.mode === "dark"
-                ? "public/app-logo/dark-logo.svg"
-                : "public/app-logo/light-logo.svg"
+                ? "/app-logo/dark-logo.svg"
+                : "/app-logo/light-logo.svg"
             }`}
             alt="App Logo"
           />
